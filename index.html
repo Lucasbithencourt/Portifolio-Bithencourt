@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfólio — Dark Sci-Fi</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- Loader: cobre a tela durante o preload do lote inicial. -->
+    <div id="loader" aria-hidden="true">
+      <div class="loader__inner">
+        <span class="loader__label">CARREGANDO</span>
+        <div class="loader__bar"><div class="loader__fill" id="loader-fill"></div></div>
+        <span class="loader__percent" id="loader-percent">0%</span>
+      </div>
+    </div>
+
+    <!--
+      HERO TRACK — pista de rolagem de 500vh. O canvas é STICKY dentro dela:
+      fica "pinado" no topo enquanto o scrub roda e, quando a pista acaba,
+      destrava e rola FISICAMENTE para cima, empurrado pelo conteúdo abaixo.
+    -->
+    <section class="hero-track" id="hero-track">
+      <canvas id="hero-canvas"></canvas>
+    </section>
+
+    <!--
+      PORTFÓLIO — revelado quando a poeira some no escuro (fim da viagem).
+      Fica em fluxo após a .scroll-space; os itens começam invisíveis
+      (autoAlpha 0 via GSAP) e sobem em fade up.
+    -->
+    <section class="manifesto" id="manifesto">
+      <div class="manifesto__inner">
+        <p class="manifesto__eyebrow" data-reveal>// MANIFESTO</p>
+
+        <h2 class="manifesto__headline">
+          <span class="manifesto__line" data-reveal>Construo experiências</span>
+          <span class="manifesto__line" data-reveal>que ficam.</span>
+          <span class="manifesto__line manifesto__accent" data-reveal>Não decoro.</span>
+        </h2>
+
+        <p class="manifesto__sub" data-reveal>
+          Cada pixel a serviço da narrativa — interface é engenharia com intenção,
+          não enfeite. O que construo permanece: rápido, preciso, inevitável.
+        </p>
+      </div>
+    </section>
+
+    <section class="works" id="works">
+      <header class="works__head">
+        <p class="works__eyebrow">// SELECTED WORKS</p>
+        <h2 class="works__title">A Máquina</h2>
+      </header>
+
+      <ul class="works__list" id="works-list">
+        <!-- TODO: apontar cada linha para a página real do case. -->
+        <li class="work" data-work>
+          <a class="work__row" href="case.html">
+            <span class="work__index">01</span>
+            <span class="work__name">Nebula OS</span>
+            <span class="work__cat">Web / App</span>
+            <span class="work__year">2025</span>
+          </a>
+        </li>
+        <li class="work" data-work>
+          <a class="work__row" href="#">
+            <span class="work__index">02</span>
+            <span class="work__name">Vanta Identity</span>
+            <span class="work__cat">Branding</span>
+            <span class="work__year">2024</span>
+          </a>
+        </li>
+        <li class="work" data-work>
+          <a class="work__row" href="#">
+            <span class="work__index">03</span>
+            <span class="work__name">Helix Commerce</span>
+            <span class="work__cat">Web / E-com</span>
+            <span class="work__year">2024</span>
+          </a>
+        </li>
+        <li class="work" data-work>
+          <a class="work__row" href="#">
+            <span class="work__index">04</span>
+            <span class="work__name">Monolith</span>
+            <span class="work__cat">Motion</span>
+            <span class="work__year">2023</span>
+          </a>
+        </li>
+        <li class="work" data-work>
+          <a class="work__row" href="#">
+            <span class="work__index">05</span>
+            <span class="work__name">Aether Grid</span>
+            <span class="work__cat">Web / 3D</span>
+            <span class="work__year">2023</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Bibliotecas (globais window.gsap / window.ScrollTrigger / window.Lenis). -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+
+    <!-- Script clássico (usa os globais acima; sem import/export). -->
+    <script src="main.js"></script>
+  </body>
+</html>

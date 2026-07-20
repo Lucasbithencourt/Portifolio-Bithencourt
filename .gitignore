@@ -1,0 +1,17 @@
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Ferramentas locais (Claude/Cowork)
+.claude/
+
+# Material de origem bruto (PNGs extraídos dos vídeos-fonte via ffmpeg).
+# Não são usados pelo site — só as versões .webp otimizadas em frames/ e
+# frames-part2/ são servidas. Mantidos no disco como backup, fora do repo
+# para não inflar o histórico do git nem o deploy.
+Act_as_a_Master_CGI_Director_a-3_frames/
+Act_as_a_Master_CGI_Director_a_frames/
+Act_as_a_Master_CGI_Director_a_frames 2/
+
+# Deps (se algum dia entrar um build step)
+node_modules/

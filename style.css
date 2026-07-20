@@ -1,0 +1,451 @@
+/* =========================================================
+   PORTFÓLIO — Dark Sci-Fi (acento VERMELHO)
+   Fullscreen Canvas Scrubbing + Manifesto + A Máquina
+   ========================================================= */
+
+:root {
+  --color-bg: #000000;             /* preto absoluto */
+  --color-fg: #f2f2f2;
+  --color-muted: #6b7280;
+  --color-accent: #e60000;         /* VERMELHO agressivo e premium */
+  --color-accent-soft: rgba(230, 0, 0, 0.25); /* separadores/bordas */
+  --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--color-bg);
+  /* O Lenis cuida da suavização — nada de scroll-behavior nativo. */
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #000000;
+}
+
+/* =========================================================
+   HERO TRACK + CANVAS STICKY (a "transição física")
+   A pista tem 500vh: enquanto ela rola, o canvas fica preso
+   no topo (sticky = pin nativo, perfeito com Lenis) e o
+   scrub avança os frames. Quando a pista acaba, o sticky
+   destrava sozinho e o canvas é EMPURRADO para cima pelo
+   conteúdo seguinte — scroll real, sem fade artificial.
+   ========================================================= */
+.hero-track {
+  position: relative;
+  width: 100%;
+  height: 500vh;
+}
+
+#hero-canvas {
+  position: sticky;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+
+  /* O preto do frame some contra o #000 do site (composição GPU).
+     O fundo dos frames foi esmagado para #000 NO PRÓPRIO ARQUIVO
+     (LUT: <=45 -> 0) e o selo d'água removido por inpainting — por
+     isso não há mais filter de compensação aqui (evita double-crush). */
+  mix-blend-mode: screen;
+}
+
+/* =========================================================
+   MANIFESTO — revelado após a poeira sumir no escuro.
+   pointer-events livres só quando visível (autoAlpha via GSAP
+   já controla visibility, que bloqueia interação enquanto oculto).
+   ========================================================= */
+.manifesto {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  padding: clamp(2rem, 8vw, 8rem);
+  border-top: 1px solid var(--color-accent-soft);
+}
+
+.manifesto__inner {
+  max-width: 60rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.manifesto__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 2rem;
+}
+
+.manifesto__headline {
+  font-size: clamp(1.9rem, 8vw, 6.5rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+}
+
+.manifesto__line {
+  display: block;
+}
+
+.manifesto__line:not(.manifesto__accent) {
+  color: #9aa0a6;
+}
+
+/* O remate agora carrega o VERMELHO da identidade. */
+.manifesto__accent {
+  color: var(--color-accent);
+  text-shadow: 0 0 24px rgba(230, 0, 0, 0.35);
+}
+
+.manifesto__sub {
+  margin-top: 2.5rem;
+  max-width: 34rem;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+
+.manifesto [data-reveal] {
+  will-change: transform, opacity;
+}
+
+/* =========================================================
+   A MÁQUINA — lista de projetos, separadores vermelhos sutis,
+   hover em vermelho agressivo.
+   ========================================================= */
+.works {
+  position: relative;
+  z-index: 2;
+  background: var(--color-bg);
+  padding: clamp(4rem, 12vh, 12rem) clamp(1.5rem, 6vw, 6rem);
+}
+
+.works__head {
+  max-width: 90rem;
+  margin: 0 auto clamp(2rem, 6vw, 5rem);
+}
+
+.works__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1rem;
+}
+
+.works__title {
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+}
+
+.works__list {
+  list-style: none;
+  max-width: 90rem;
+  margin: 0 auto;
+  border-top: 1px solid var(--color-accent-soft);
+}
+
+.work {
+  will-change: transform, opacity;
+}
+
+.work__row {
+  display: grid;
+  grid-template-columns: 3rem 1fr auto auto;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 3rem);
+  padding: clamp(1.1rem, 2.6vw, 2rem) 0.5rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-accent-soft);
+  color: #8a9099;
+  transition: color 0.35s ease, padding-left 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.work__index {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--color-accent);
+  transition: color 0.35s ease;
+}
+
+.work__name {
+  font-size: clamp(1.35rem, 6.5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  color: #c8ccd0;
+  transition: color 0.35s ease, text-shadow 0.35s ease;
+}
+
+.work__cat,
+.work__year {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 0.35s ease;
+}
+
+.work__year {
+  color: #6b7178;
+}
+
+/* Hover: o VERMELHO assume — nome aceso com glow de neon. */
+.work__row:hover {
+  padding-left: 1.25rem;
+  border-color: var(--color-accent);
+}
+
+.work__row:hover .work__name {
+  color: var(--color-accent);
+  text-shadow: 0 0 28px rgba(230, 0, 0, 0.45);
+}
+
+.work__row:hover .work__index,
+.work__row:hover .work__cat,
+.work__row:hover .work__year {
+  color: var(--color-fg);
+}
+
+/* Colapso responsivo da linha em telas estreitas. */
+@media (max-width: 640px) {
+  .work__row {
+    grid-template-columns: 2rem 1fr;
+    grid-template-areas:
+      "idx  name"
+      ".    meta";
+    row-gap: 0.5rem;
+  }
+  .work__index { grid-area: idx; }
+  .work__name  { grid-area: name; }
+  .work__cat   { grid-column: 2; }
+  .work__year  { grid-column: 2; justify-self: end; }
+
+  .manifesto { padding: 4rem 1.25rem; min-height: auto; }
+  .works { padding: 4rem 1.25rem; }
+}
+
+/* =========================================================
+   LOADER
+   ========================================================= */
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease;
+}
+
+#loader.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loader__inner {
+  width: min(320px, 70vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.loader__label {
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  color: var(--color-muted);
+}
+
+.loader__bar {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.loader__fill {
+  width: 0%;
+  height: 100%;
+  background: var(--color-accent);
+  box-shadow: 0 0 12px var(--color-accent);
+  transition: width 0.15s linear;
+}
+
+.loader__percent {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--color-fg);
+}
+
+/* =========================================================
+   PÁGINA DE CASE (case.html)
+   ========================================================= */
+.case-header {
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 6vw, 6rem);
+}
+
+.back-link {
+  display: inline-block;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-decoration: none;
+  color: var(--color-muted);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.back-link:hover {
+  color: var(--color-accent);
+  transform: translateX(-4px);
+}
+
+.case-hero {
+  padding: clamp(2rem, 8vh, 6rem) clamp(1.5rem, 6vw, 6rem) 0;
+  max-width: 100rem;
+  margin: 0 auto;
+}
+
+.case-eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1.5rem;
+}
+
+/* Título colossal. */
+.case-title {
+  font-size: clamp(3rem, 13vw, 11rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--color-fg);
+}
+
+/* Grid de metadados — 4 colunas, detalhes em vermelho. */
+.case-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1rem, 3vw, 3rem);
+  margin-top: clamp(2.5rem, 7vh, 5rem);
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--color-accent-soft);
+}
+
+.case-meta__item dt {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 0.6rem;
+}
+
+.case-meta__item dd {
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+  color: #c8ccd0;
+}
+
+@media (max-width: 640px) {
+  .case-meta {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 1.75rem;
+  }
+}
+
+/* Container de mídia principal (16:9, largura total). */
+.case-media-wrap {
+  padding: clamp(3rem, 8vh, 6rem) clamp(1.5rem, 6vw, 6rem);
+  max-width: 100rem;
+  margin: 0 auto;
+}
+
+.case-media {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #070707;
+  border: 1px solid rgba(230, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.case-media__hint {
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  color: var(--color-muted);
+}
+
+/* Footer de navegação — PRÓXIMO PROJETO gigante. */
+.case-next {
+  display: block;
+  text-decoration: none;
+  padding: clamp(4rem, 14vh, 9rem) clamp(1.5rem, 6vw, 6rem);
+  border-top: 1px solid var(--color-accent-soft);
+  transition: background-color 0.4s ease;
+}
+
+.case-next__eyebrow {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1.25rem;
+}
+
+.case-next__title {
+  display: block;
+  font-size: clamp(2.2rem, 9vw, 8rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: #8a9099;
+  transition: color 0.4s ease, text-shadow 0.4s ease,
+    transform 0.4s ease;
+}
+
+.case-next:hover .case-next__title {
+  color: var(--color-accent);
+  text-shadow: 0 0 32px rgba(230, 0, 0, 0.45);
+  transform: translateX(0.5rem);
+}
+
+/* =========================================================
+   ACESSIBILIDADE — prefers-reduced-motion
+   Sem viagem: esqueleto estático + portfólio visível direto.
+   ========================================================= */
+html.reduced-motion .hero-track {
+  height: 100vh;
+}
+
+html.reduced-motion .manifesto [data-reveal],
+html.reduced-motion #works [data-work] {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}

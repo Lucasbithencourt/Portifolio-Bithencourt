@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nebula OS — Case · Portfólio</title>
+    <!-- Herda o design system da home. -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body class="case-page">
+    <!-- HEADER — voltar para a home. -->
+    <header class="case-header">
+      <a class="back-link" href="index.html">← VOLTAR</a>
+    </header>
+
+    <main>
+      <!-- HERO DO CASE — título colossal + metadados. -->
+      <section class="case-hero">
+        <p class="case-eyebrow">// CASE 01</p>
+        <h1 class="case-title">Nebula&nbsp;OS</h1>
+
+        <dl class="case-meta">
+          <div class="case-meta__item">
+            <dt>Cliente</dt>
+            <dd>Nebula Labs</dd>
+          </div>
+          <div class="case-meta__item">
+            <dt>Papel</dt>
+            <dd>Design &amp; Front-end</dd>
+          </div>
+          <div class="case-meta__item">
+            <dt>Ano</dt>
+            <dd>2025</dd>
+          </div>
+          <div class="case-meta__item">
+            <dt>Stack</dt>
+            <dd>JS · GSAP · WebGL</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- CONTAINER DE MÍDIA — thumbnail/vídeo principal do projeto. -->
+      <section class="case-media-wrap">
+        <!-- TODO: substituir pelo <img>/<video> real do projeto. -->
+        <div class="case-media" role="img" aria-label="Mídia principal do projeto">
+          <span class="case-media__hint">MEDIA / 16:9</span>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER DE NAVEGAÇÃO — próximo projeto (gigante). -->
+    <a class="case-next" href="#">
+      <span class="case-next__eyebrow">// NEXT</span>
+      <span class="case-next__title">PRÓXIMO&nbsp;PROJETO&nbsp;→</span>
+    </a>
+
+    <!-- Bibliotecas + script compartilhado (blindado: sem hero aqui). -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
