@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portfólio — Dark Sci-Fi</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=1" />
   </head>
 
   <body>
@@ -55,7 +55,8 @@
       </header>
 
       <ul class="works__list" id="works-list">
-        <!-- TODO: apontar cada linha para a página real do case. -->
+        <!-- data-preview (opcional): caminho de uma imagem real do projeto.
+             Sem ele, o card do cursor mostra categoria/nome/ano em texto. -->
         <li class="work" data-work>
           <a class="work__row" href="case.html">
             <span class="work__index">01</span>
@@ -65,7 +66,7 @@
           </a>
         </li>
         <li class="work" data-work>
-          <a class="work__row" href="#">
+          <a class="work__row" href="case-02.html">
             <span class="work__index">02</span>
             <span class="work__name">Vanta Identity</span>
             <span class="work__cat">Branding</span>
@@ -73,7 +74,7 @@
           </a>
         </li>
         <li class="work" data-work>
-          <a class="work__row" href="#">
+          <a class="work__row" href="case-03.html">
             <span class="work__index">03</span>
             <span class="work__name">Helix Commerce</span>
             <span class="work__cat">Web / E-com</span>
@@ -81,7 +82,7 @@
           </a>
         </li>
         <li class="work" data-work>
-          <a class="work__row" href="#">
+          <a class="work__row" href="case-04.html">
             <span class="work__index">04</span>
             <span class="work__name">Monolith</span>
             <span class="work__cat">Motion</span>
@@ -89,7 +90,7 @@
           </a>
         </li>
         <li class="work" data-work>
-          <a class="work__row" href="#">
+          <a class="work__row" href="case-05.html">
             <span class="work__index">05</span>
             <span class="work__name">Aether Grid</span>
             <span class="work__cat">Web / 3D</span>
@@ -97,7 +98,93 @@
           </a>
         </li>
       </ul>
+
+      <!-- PREVIEW FLUTUANTE — card que segue o cursor sobre a lista.
+           Posicionado por GSAP (translate); nunca intercepta o mouse.
+           Dois estados: imagem (quando a linha tem data-preview) OU texto
+           (categoria/nome/ano lidos da própria linha). O JS alterna a
+           classe .is-image / .is-text e faz o crossfade no wrapper. -->
+      <div class="work-preview" id="work-preview" aria-hidden="true">
+        <div class="work-preview__content" id="work-preview-content">
+          <img class="work-preview__img" id="work-preview-img" alt="" />
+          <div class="work-preview__text">
+            <span class="work-preview__cat" id="work-preview-cat"></span>
+            <span class="work-preview__name" id="work-preview-name"></span>
+            <span class="work-preview__year" id="work-preview-year"></span>
+          </div>
+        </div>
+      </div>
     </section>
+
+    <!-- SOBRE — mesmo idioma do Manifesto (eyebrow + headline + texto). -->
+    <section class="about" id="about">
+      <div class="about__inner">
+        <p class="about__eyebrow" data-reveal>// SOBRE</p>
+
+        <h2 class="about__headline" data-reveal>Lucas Bithencourt Florencio</h2>
+
+        <p class="about__bio" data-reveal>
+          Comecei cedo — vídeo game me levou pra tecnologia, tecnologia me
+          levou pra internet. Fiz técnico em Informática no CEDUP Abílio
+          Paulo, onde aprendi a programar e descobri que design não é enfeite:
+          é lógica aplicada. Migrei pra social media — posts, outdoor, flyer,
+          pôster. Em 2022 entrei numa imobiliária pra tocar o marketing deles
+          e aprendi, na prática, a lógica por trás de cada peça. 2025 foi o
+          ponto de virada: entrei na agência FEMO e passei a unir tudo —
+          social media, captação externa, roteiro, tráfego pago e
+          desenvolvimento — num só ofício. Hoje trabalho com tráfego pago e
+          crio sites e sistemas que convertem.
+        </p>
+
+        <p class="about__accent" data-reveal>
+          Sites assertivos. Tráfego previsível. Estratégia bem direcionada.
+        </p>
+
+        <ul class="about__formacao" data-reveal>
+          <li class="about__formacao-item">Técnico em Informática — CEDUP Abílio Paulo</li>
+          <li class="about__formacao-item">Tráfego Pago — SATC</li>
+          <li class="about__formacao-item">Publicidade e Propaganda — SATC (em andamento)</li>
+          <li class="about__formacao-item">Marketing Digital — curso online</li>
+          <li class="about__formacao-item">Formação prática — Triplo X (aulas com gestores de tráfego e desenvolvedores, parceria Blueberry)</li>
+          <li class="about__formacao-item">Estudo contínuo — pesquisa autodidata</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CONTATO — eyebrow + headline + dois links grandes clicáveis. -->
+    <section class="contact" id="contact">
+      <div class="contact__inner">
+        <p class="contact__eyebrow" data-reveal>// CONTATO</p>
+
+        <h2 class="contact__headline" data-reveal>
+          Vamos construir algo que converte.
+        </h2>
+
+        <div class="contact__links">
+          <a class="contact__link" href="mailto:lucasbithencourt2005@gmail.com" data-reveal>
+            lucasbithencourt2005@gmail.com
+          </a>
+          <a
+            class="contact__link"
+            href="https://wa.me/5548999337562"
+            target="_blank"
+            rel="noopener"
+            data-reveal
+          >
+            +55 48 99933-7562
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER GLOBAL — presente em todas as 6 páginas. -->
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <span>Lucas Bithencourt Florencio</span>
+        <a href="mailto:lucasbithencourt2005@gmail.com">lucasbithencourt2005@gmail.com</a>
+        <span>© 2026</span>
+      </div>
+    </footer>
 
     <!-- Bibliotecas (globais window.gsap / window.ScrollTrigger / window.Lenis). -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -105,6 +192,6 @@
     <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
 
     <!-- Script clássico (usa os globais acima; sem import/export). -->
-    <script src="main.js"></script>
+    <script src="main.js?v=1"></script>
   </body>
 </html>

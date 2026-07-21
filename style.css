@@ -231,6 +231,78 @@ body {
   color: var(--color-fg);
 }
 
+/* Card de preview que segue o cursor sobre a lista de projetos.
+   Posicionado por GSAP (translate); nunca intercepta o mouse. */
+.work-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid var(--color-accent-soft);
+  border-radius: 4px;
+  box-shadow: 0 0 32px rgba(230, 0, 0, 0.2);
+  opacity: 0;                 /* GSAP controla o fade in/out */
+  pointer-events: none;       /* nunca bloqueia o hover das linhas */
+  z-index: 50;                /* acima do conteúdo da seção */
+  will-change: transform, opacity;
+}
+
+/* Wrapper do conteúdo — recebe o crossfade (opacity) na troca de linha.
+   O show/hide do card fica no .work-preview (autoAlpha), sem conflito. */
+.work-preview__content {
+  position: absolute;
+  inset: 0;
+}
+
+/* Os dois estados ocupam o card inteiro; só um fica visível por vez. */
+.work-preview__img,
+.work-preview__text {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+.work-preview.is-image .work-preview__img { display: block; }
+.work-preview.is-text .work-preview__text { display: flex; }
+
+.work-preview__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Estado de TEXTO — só tipografia, mesmo idioma visual do site.
+   Categoria no topo, nome no meio, ano embaixo. */
+.work-preview__text {
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem 1.15rem;
+  background: var(--color-bg);   /* preto sólido para legibilidade */
+}
+
+.work-preview__cat {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.work-preview__name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+}
+
+.work-preview__year {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+}
+
 /* Colapso responsivo da linha em telas estreitas. */
 @media (max-width: 640px) {
   .work__row {
@@ -247,6 +319,199 @@ body {
 
   .manifesto { padding: 4rem 1.25rem; min-height: auto; }
   .works { padding: 4rem 1.25rem; }
+}
+
+/* Sem cursor (touch): o preview flutuante não faz sentido. */
+@media (hover: none) {
+  .work-preview { display: none; }
+}
+
+/* =========================================================
+   SOBRE — mesmo idioma do Manifesto.
+   ========================================================= */
+.about {
+  position: relative;
+  z-index: 2;
+  background: var(--color-bg);
+  padding: clamp(4rem, 12vh, 12rem) clamp(1.5rem, 6vw, 6rem);
+  border-top: 1px solid var(--color-accent-soft);
+}
+
+.about__inner {
+  max-width: 60rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.about__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 2rem;
+}
+
+.about__headline {
+  font-size: clamp(1.9rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+  margin-bottom: 2.5rem;
+}
+
+.about__bio {
+  max-width: 44rem;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  line-height: 1.8;
+  color: var(--color-muted);
+}
+
+/* Linha de destaque — carrega o vermelho da identidade (como o manifesto). */
+.about__accent {
+  margin-top: 2.5rem;
+  font-size: clamp(1.3rem, 3.2vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--color-accent);
+  text-shadow: 0 0 24px rgba(230, 0, 0, 0.35);
+}
+
+/* Formação — lista limpa, sem hover/link, separadores sutis. */
+.about__formacao {
+  list-style: none;
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  border-top: 1px solid var(--color-accent-soft);
+}
+
+.about__formacao-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--color-accent-soft);
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  letter-spacing: 0.02em;
+  color: #c8ccd0;
+}
+
+/* Marcador "//" em vermelho no lugar do bullet padrão. */
+.about__formacao-item::before {
+  content: "//";
+  flex-shrink: 0;
+  color: var(--color-accent);
+}
+
+.about [data-reveal] {
+  will-change: transform, opacity;
+}
+
+/* =========================================================
+   CONTATO — eyebrow + headline + dois links grandes.
+   Links herdam o mesmo hover das linhas de projeto.
+   ========================================================= */
+.contact {
+  position: relative;
+  z-index: 2;
+  background: var(--color-bg);
+  padding: clamp(4rem, 12vh, 12rem) clamp(1.5rem, 6vw, 6rem);
+  border-top: 1px solid var(--color-accent-soft);
+}
+
+.contact__inner {
+  max-width: 90rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.contact__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1rem;
+}
+
+.contact__headline {
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+.contact__links {
+  border-top: 1px solid var(--color-accent-soft);
+}
+
+.contact__link {
+  display: block;
+  padding: clamp(1.1rem, 2.6vw, 2rem) 0.5rem;
+  border-bottom: 1px solid var(--color-accent-soft);
+  text-decoration: none;
+  font-size: clamp(1.35rem, 5.5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: #c8ccd0;
+  /* E-mails/telefones longos quebram em vez de estourar a viewport. */
+  overflow-wrap: anywhere;
+  transition: color 0.35s ease, padding-left 0.35s ease,
+    border-color 0.35s ease, text-shadow 0.35s ease;
+}
+
+.contact__link:hover {
+  padding-left: 1.25rem;
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  text-shadow: 0 0 28px rgba(230, 0, 0, 0.45);
+}
+
+.contact [data-reveal] {
+  will-change: transform, opacity;
+}
+
+/* =========================================================
+   FOOTER GLOBAL — uma linha, em todas as páginas.
+   ========================================================= */
+.site-footer {
+  position: relative;
+  z-index: 2;
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-accent-soft);
+  padding: clamp(2rem, 5vh, 3rem) clamp(1.5rem, 6vw, 6rem);
+}
+
+.site-footer__inner {
+  max-width: 90rem;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+}
+
+.site-footer__inner a {
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.site-footer__inner a:hover {
+  color: var(--color-accent);
+}
+
+/* Espaçamento das novas seções em telas estreitas (consistente c/ o resto). */
+@media (max-width: 640px) {
+  .about { padding: 4rem 1.25rem; }
+  .contact { padding: 4rem 1.25rem; }
+  .site-footer { padding: 2rem 1.25rem; }
+  .site-footer__inner { justify-content: flex-start; }
 }
 
 /* =========================================================
@@ -384,11 +649,63 @@ body {
   margin: 0 auto;
 }
 
+/* Frame de navegador — a borda/glow vive aqui (o corpo herda o corte). */
+.case-media-frame {
+  border: 1px solid rgba(230, 0, 0, 0.15);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(230, 0, 0, 0.06);
+}
+
+/* Barra de chrome no topo. */
+.case-media__chrome {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  height: 2.5rem;
+  padding: 0 0.9rem;
+  background: #0b0b0b;                 /* levemente mais claro que o corpo */
+  border-bottom: 1px solid var(--color-accent-soft);
+}
+
+.case-media__dots {
+  display: flex;
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+
+.case-media__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* Cores dessaturadas — insinuam macOS sem chamar atenção. */
+.case-media__dot--red    { background: #7a3535; }
+.case-media__dot--yellow { background: #7a6a35; }
+.case-media__dot--green  { background: #3a6a41; }
+
+/* Pill de URL fictícia. */
+.case-media__url {
+  flex: 1;
+  min-width: 0;                        /* permite truncar em telas estreitas */
+  max-width: 24rem;
+  padding: 0.32rem 0.85rem;
+  border-radius: 999px;
+  background: #161616;                 /* mais claro que a barra */
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Corpo — mantém 16:9 e o fundo; a borda agora é do frame. */
 .case-media {
   width: 100%;
   aspect-ratio: 16 / 9;
   background: #070707;
-  border: 1px solid rgba(230, 0, 0, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -444,7 +761,9 @@ html.reduced-motion .hero-track {
 }
 
 html.reduced-motion .manifesto [data-reveal],
-html.reduced-motion #works [data-work] {
+html.reduced-motion #works [data-work],
+html.reduced-motion #about [data-reveal],
+html.reduced-motion #contact [data-reveal] {
   opacity: 1 !important;
   transform: none !important;
   visibility: visible !important;

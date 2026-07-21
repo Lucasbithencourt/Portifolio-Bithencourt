@@ -295,6 +295,137 @@ function initPortfolioReveal() {
       },
     });
   }
+
+  const aboutItems = gsap.utils.toArray("#about [data-reveal]");
+  if (aboutItems.length) {
+    gsap.set(aboutItems, { autoAlpha: 0, y: 50 });
+    gsap.to(aboutItems, {
+      autoAlpha: 1,
+      y: 0,
+      ease: "power3.out",
+      duration: 1.1,
+      stagger: 0.14,
+      scrollTrigger: {
+        trigger: "#about",
+        start: "top 75%",
+        toggleActions: "play none none reverse",
+      },
+    });
+  }
+
+  const contactItems = gsap.utils.toArray("#contact [data-reveal]");
+  if (contactItems.length) {
+    gsap.set(contactItems, { autoAlpha: 0, y: 50 });
+    gsap.to(contactItems, {
+      autoAlpha: 1,
+      y: 0,
+      ease: "power3.out",
+      duration: 1.1,
+      stagger: 0.14,
+      scrollTrigger: {
+        trigger: "#contact",
+        start: "top 75%",
+        toggleActions: "play none none reverse",
+      },
+    });
+  }
+}
+
+/* =========================================================================
+   MÓDULO: PREVIEW FLUTUANTE DA LISTA (segue o cursor)
+   Blindado: só roda se #works-list e #work-preview existirem. Desativa em
+   touch/movimento reduzido (onde não há cursor pra seguir).
+   ========================================================================= */
+function initWorkPreview() {
+  const list = document.getElementById("works-list");
+  const preview = document.getElementById("work-preview");
+  const previewImg = document.getElementById("work-preview-img");
+  if (!list || !preview || !previewImg) return;
+
+  // Wrapper do conteúdo (recebe o crossfade) + campos do estado de texto.
+  const content = document.getElementById("work-preview-content");
+  const previewCat = document.getElementById("work-preview-cat");
+  const previewName = document.getElementById("work-preview-name");
+  const previewYear = document.getElementById("work-preview-year");
+
+  // Sem cursor: nada de preview flutuante.
+  if (prefersReducedMotion || window.matchMedia("(hover: none)").matches) return;
+
+  const rows = gsap.utils.toArray("#works-list [data-work]");
+  if (!rows.length) return;
+
+  // Card centrado no cursor (o translate do quickTo parte daqui).
+  gsap.set(preview, { xPercent: -50, yPercent: -50 });
+
+  // quickTo: setter otimizado, com leve inércia (o lerp vem do duration/ease).
+  const xTo = gsap.quickTo(preview, "x", { duration: 0.45, ease: "power3" });
+  const yTo = gsap.quickTo(preview, "y", { duration: 0.45, ease: "power3" });
+
+  // O mousemove só é escutado enquanto o cursor está sobre a lista.
+  const onMove = (e) => {
+    xTo(e.clientX);
+    yTo(e.clientY);
+  };
+
+  list.addEventListener("mouseenter", (e) => {
+    // Fixa a posição no 1º contato pra o card não "voar" do canto (0,0).
+    gsap.set(preview, { x: e.clientX, y: e.clientY });
+    window.addEventListener("mousemove", onMove);
+  });
+
+  // Linha atualmente projetada; reseta ao sair da lista.
+  let currentRow = null;
+
+  // Projeta o conteúdo da linha no card: imagem (se houver data-preview real)
+  // OU texto lido da própria linha (.work__cat / .work__name / .work__year).
+  // A lógica de imagem continua intacta — é só deixar de ser o único estado.
+  function renderPreview(row) {
+    const src = row.getAttribute("data-preview");
+    if (src) {
+      previewImg.src = src;
+      preview.classList.add("is-image");
+      preview.classList.remove("is-text");
+    } else {
+      const txt = (sel) => {
+        const el = row.querySelector(sel);
+        return el ? el.textContent.trim() : "";
+      };
+      previewCat.textContent = txt(".work__cat");
+      previewName.textContent = txt(".work__name");
+      previewYear.textContent = txt(".work__year");
+      preview.classList.add("is-text");
+      preview.classList.remove("is-image");
+    }
+  }
+
+  list.addEventListener("mouseleave", () => {
+    window.removeEventListener("mousemove", onMove);
+    gsap.to(preview, { autoAlpha: 0, duration: 0.3, ease: "power2.out" });
+    currentRow = null; // próxima entrada renderiza limpo (sem crossfade oculto)
+  });
+
+  // Cada linha revela o card e troca o conteúdo (imagem OU texto) com crossfade.
+  rows.forEach((row) => {
+    row.addEventListener("mouseenter", () => {
+      if (row !== currentRow) {
+        if (currentRow === null) {
+          renderPreview(row); // 1º conteúdo da leva entra sem crossfade
+        } else {
+          gsap.killTweensOf(content);
+          gsap.to(content, {
+            opacity: 0,
+            duration: 0.12,
+            onComplete: () => {
+              renderPreview(row);
+              gsap.to(content, { opacity: 1, duration: 0.2 });
+            },
+          });
+        }
+        currentRow = row;
+      }
+      gsap.to(preview, { autoAlpha: 1, duration: 0.3, ease: "power2.out" });
+    });
+  });
 }
 
 /* =========================================================================
@@ -309,3 +440,4 @@ if (heroCanvas) {
 }
 
 initPortfolioReveal();
+initWorkPreview();
