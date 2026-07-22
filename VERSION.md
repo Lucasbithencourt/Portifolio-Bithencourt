@@ -21,19 +21,19 @@ Ex.: `?v=1` → `?v=2` na próxima vez, `?v=3` na seguinte, e assim por diante.
 
 - Use o MESMO número nos dois arquivos e nas 6 páginas (todas compartilham
   os mesmos `style.css` e `main.js`).
-- As 6 páginas: `index.html`, `case.html`, `case-02.html`, `case-03.html`,
-  `case-04.html`, `case-05.html`.
+- As 5 páginas: `index.html`, `case.html`, `case-02.html`, `case-03.html`,
+  `case-04.html`.
 - NÃO mexa nos `<script>` do GSAP/Lenis (CDN) — eles já têm a versão na
   própria URL (`.../gsap/3.12.5/...`, `.../lenis@1.1.14/...`).
 
 ## Find-and-replace rápido (terminal, na raiz do projeto)
 
-Troque `1` (versão atual) por `2` (versão nova) nas duas ocorrências:
+Troque `2` (versão atual) por `3` (versão nova) nas duas ocorrências:
 
 ```bash
 # macOS (sed -i '')
-sed -i '' 's|style.css?v=1|style.css?v=2|; s|main.js?v=1|main.js?v=2|' \
-  index.html case.html case-02.html case-03.html case-04.html case-05.html
+sed -i '' 's|style.css?v=2|style.css?v=3|; s|main.js?v=2|main.js?v=3|' \
+  index.html case.html case-02.html case-03.html case-04.html
 ```
 
 Depois confirme que ficou tudo igual:
@@ -44,7 +44,7 @@ grep -o 'style.css?v=[0-9]*\|main.js?v=[0-9]*' *.html
 
 Todos devem mostrar o MESMO número novo.
 
-## Versão atual: v=1
+## Versão atual: v=2
 
 (Atualize esta linha junto com o find-and-replace, pra você sempre saber
 qual é o número corrente.)

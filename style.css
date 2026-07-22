@@ -642,6 +642,41 @@ body {
   }
 }
 
+/* Contexto do case — texto de leitura confortável + link ao vivo. */
+.case-context {
+  max-width: 100rem;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vh, 4rem) clamp(1.5rem, 6vw, 6rem) 0;
+}
+
+.case-context__text {
+  max-width: 46rem;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.8;
+  color: #c8ccd0;
+}
+
+/* Link de destaque em vermelho, mesmo idioma do resto do site. */
+.case-context__link {
+  display: inline-block;
+  margin-top: 2rem;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--color-accent);
+  text-decoration: none;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--color-accent-soft);
+  transition: border-color 0.35s ease, text-shadow 0.35s ease,
+    transform 0.35s ease;
+}
+
+.case-context__link:hover {
+  border-color: var(--color-accent);
+  text-shadow: 0 0 24px rgba(230, 0, 0, 0.5);
+  transform: translateX(4px);
+}
+
 /* Container de mídia principal (16:9, largura total). */
 .case-media-wrap {
   padding: clamp(3rem, 8vh, 6rem) clamp(1.5rem, 6vw, 6rem);
