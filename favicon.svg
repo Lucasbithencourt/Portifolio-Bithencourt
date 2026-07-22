@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="LB">
+  <!-- Glyph geométrico minimalista: "L" no vermelho do site (#e60000) sobre preto. -->
+  <rect width="32" height="32" fill="#000000" />
+  <path d="M10 6 h5 v15 h11 v5 H10 Z" fill="#e60000" />
+</svg>

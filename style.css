@@ -6,7 +6,7 @@
 :root {
   --color-bg: #000000;             /* preto absoluto */
   --color-fg: #f2f2f2;
-  --color-muted: #6b7280;
+  --color-muted: #868d96;          /* cinza neutro — contraste AA (~6.3:1) no preto */
   --color-accent: #e60000;         /* VERMELHO agressivo e premium */
   --color-accent-soft: rgba(230, 0, 0, 0.25); /* separadores/bordas */
   --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -36,6 +36,30 @@ body {
 ::selection {
   background: var(--color-accent);
   color: #000000;
+}
+
+/* Acessível a leitores de tela, invisível no layout (padrão clip). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Foco de teclado visível e consistente com a identidade (vermelho).
+   Só :focus-visible (teclado) — não afeta clique de mouse, e não remove
+   o foco nativo de nenhum outro elemento. */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 /* =========================================================
@@ -211,7 +235,8 @@ body {
 }
 
 .work__year {
-  color: #6b7178;
+  /* Antes #6b7178 (~4.3:1, reprova AA). Usa a variável já corrigida. */
+  color: var(--color-muted);
 }
 
 /* Hover: o VERMELHO assume — nome aceso com glow de neon. */

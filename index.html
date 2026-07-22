@@ -3,11 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfólio — Dark Sci-Fi</title>
-    <link rel="stylesheet" href="style.css?v=2" />
+    <title>Lucas Bithencourt — Design &amp; Desenvolvimento Web</title>
+    <meta
+      name="description"
+      content="Portfólio de Lucas Bithencourt Florencio — design e desenvolvimento de sites que convertem."
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+    <!-- Preconnect aos CDNs (GSAP/Lenis) — reduz latência de conexão. -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="preconnect" href="https://unpkg.com" />
+
+    <!-- Open Graph / Twitter. TODO: trocar seudominio.com pelo domínio real. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://seudominio.com/" />
+    <meta property="og:title" content="Lucas Bithencourt — Design & Desenvolvimento Web" />
+    <meta
+      property="og:description"
+      content="Portfólio de Lucas Bithencourt Florencio — design e desenvolvimento de sites que convertem."
+    />
+    <!-- TODO: trocar por uma imagem OG dedicada 1200x630 quando tiver. -->
+    <meta property="og:image" content="https://seudominio.com/frames/0221.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="stylesheet" href="style.css?v=3" />
   </head>
 
   <body>
+    <!-- H1 acessível (leitores de tela) — oculto visualmente com .sr-only. -->
+    <h1 class="sr-only">Lucas Bithencourt Florencio — Design &amp; Desenvolvimento Web</h1>
+
     <!-- Loader: cobre a tela durante o preload do lote inicial. -->
     <div id="loader" aria-hidden="true">
       <div class="loader__inner">
@@ -23,7 +50,8 @@
       destrava e rola FISICAMENTE para cima, empurrado pelo conteúdo abaixo.
     -->
     <section class="hero-track" id="hero-track">
-      <canvas id="hero-canvas"></canvas>
+      <!-- Canvas puramente decorativo — o conteúdo real vem no scroll. -->
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
     </section>
 
     <!--
@@ -36,22 +64,23 @@
         <p class="manifesto__eyebrow" data-reveal>// MANIFESTO</p>
 
         <h2 class="manifesto__headline">
-          <span class="manifesto__line" data-reveal>Construo experiências</span>
-          <span class="manifesto__line" data-reveal>que ficam.</span>
+          <span class="manifesto__line" data-reveal>Construo sites</span>
+          <span class="manifesto__line" data-reveal>que convertem.</span>
           <span class="manifesto__line manifesto__accent" data-reveal>Não decoro.</span>
         </h2>
 
         <p class="manifesto__sub" data-reveal>
-          Cada pixel a serviço da narrativa — interface é engenharia com intenção,
-          não enfeite. O que construo permanece: rápido, preciso, inevitável.
+          Cada site é uma máquina de conversão — design e tráfego trabalhando
+          juntos, não um enfeite parado numa vitrine. O que construo gera
+          resultado: rápido, direcionado, mensurável.
         </p>
       </div>
     </section>
 
     <section class="works" id="works">
       <header class="works__head">
-        <p class="works__eyebrow">// SELECTED WORKS</p>
-        <h2 class="works__title">A Máquina</h2>
+        <p class="works__eyebrow">// CASES</p>
+        <h2 class="works__title">Cases</h2>
       </header>
 
       <ul class="works__list" id="works-list">
@@ -184,6 +213,6 @@
     <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
 
     <!-- Script clássico (usa os globais acima; sem import/export). -->
-    <script src="main.js?v=2"></script>
+    <script src="main.js?v=3"></script>
   </body>
 </html>

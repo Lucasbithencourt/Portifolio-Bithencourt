@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: trocar seudominio.com pelo domínio real quando tiver. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://seudominio.com/</loc></url>
+  <url><loc>https://seudominio.com/case.html</loc></url>
+  <url><loc>https://seudominio.com/case-02.html</loc></url>
+  <url><loc>https://seudominio.com/case-03.html</loc></url>
+  <url><loc>https://seudominio.com/case-04.html</loc></url>
+</urlset>
