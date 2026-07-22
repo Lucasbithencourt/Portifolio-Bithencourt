@@ -15,3 +15,4 @@ Act_as_a_Master_CGI_Director_a_frames 2/
 
 # Deps (se algum dia entrar um build step)
 node_modules/
+personagens-src/
