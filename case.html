@@ -29,7 +29,7 @@
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- Herda o design system da home. -->
-    <link rel="stylesheet" href="style.css?v=3" />
+    <link rel="stylesheet" href="style.css?v=6" />
   </head>
 
   <body class="case-page">
@@ -96,9 +96,13 @@
             </div>
             <div class="case-media__url">uppediatria.com.br</div>
           </div>
-          <!-- TODO: substituir o corpo (.case-media) pelo <img>/<video> real. -->
-          <div class="case-media" role="img" aria-label="Mídia principal do projeto">
-            <span class="case-media__hint">MEDIA / 16:9</span>
+          <div class="case-media">
+            <img
+              class="case-media__img"
+              src="media/up-hero.jpg"
+              loading="lazy"
+              alt="Captura de tela do site UP! Especialidades Pediátricas"
+            />
           </div>
         </div>
       </section>
@@ -123,6 +127,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
-    <script src="main.js?v=3"></script>
+    <script src="main.js?v=6"></script>
   </body>
 </html>

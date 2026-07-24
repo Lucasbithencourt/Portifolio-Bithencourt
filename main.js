@@ -296,6 +296,23 @@ function initPortfolioReveal() {
     });
   }
 
+  const trafegoItems = gsap.utils.toArray("#trafego [data-reveal]");
+  if (trafegoItems.length) {
+    gsap.set(trafegoItems, { autoAlpha: 0, y: 50 });
+    gsap.to(trafegoItems, {
+      autoAlpha: 1,
+      y: 0,
+      ease: "power3.out",
+      duration: 0.9,
+      stagger: 0.08,
+      scrollTrigger: {
+        trigger: "#trafego",
+        start: "top 75%",
+        toggleActions: "play none none reverse",
+      },
+    });
+  }
+
   const aboutItems = gsap.utils.toArray("#about [data-reveal]");
   if (aboutItems.length) {
     gsap.set(aboutItems, { autoAlpha: 0, y: 50 });

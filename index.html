@@ -28,36 +28,21 @@
     <meta property="og:image" content="https://seudominio.com/frames/0221.webp" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <link rel="stylesheet" href="style.css?v=3" />
+    <link rel="stylesheet" href="style.css?v=6" />
   </head>
 
   <body>
     <!-- H1 acessível (leitores de tela) — oculto visualmente com .sr-only. -->
     <h1 class="sr-only">Lucas Bithencourt Florencio — Design &amp; Desenvolvimento Web</h1>
 
-    <!-- Loader: cobre a tela durante o preload do lote inicial. -->
-    <div id="loader" aria-hidden="true">
-      <div class="loader__inner">
-        <span class="loader__label">CARREGANDO</span>
-        <div class="loader__bar"><div class="loader__fill" id="loader-fill"></div></div>
-        <span class="loader__percent" id="loader-percent">0%</span>
-      </div>
-    </div>
-
     <!--
-      HERO TRACK — pista de rolagem de 500vh. O canvas é STICKY dentro dela:
-      fica "pinado" no topo enquanto o scrub roda e, quando a pista acaba,
-      destrava e rola FISICAMENTE para cima, empurrado pelo conteúdo abaixo.
-    -->
-    <section class="hero-track" id="hero-track">
-      <!-- Canvas puramente decorativo — o conteúdo real vem no scroll. -->
-      <canvas id="hero-canvas" aria-hidden="true"></canvas>
-    </section>
+      HERO ANIMADO (canvas 500vh rosto→esqueleto) desativado por enquanto.
+      Sem #hero-canvas no HTML, o bootstrap do main.js cai no "else" e
+      libera o scroll direto. A função initHero() e as pastas frames/ e
+      frames-part2/ ficam guardadas para uso futuro (personagem vai pra Sobre).
+      Também removido o #loader — só existia pra cobrir a tela no preload.
 
-    <!--
-      PORTFÓLIO — revelado quando a poeira some no escuro (fim da viagem).
-      Fica em fluxo após a .scroll-space; os itens começam invisíveis
-      (autoAlpha 0 via GSAP) e sobem em fade up.
+      MANIFESTO — agora a primeira seção da página.
     -->
     <section class="manifesto" id="manifesto">
       <div class="manifesto__inner">
@@ -132,6 +117,57 @@
             <span class="work-preview__cat" id="work-preview-cat"></span>
             <span class="work-preview__name" id="work-preview-name"></span>
             <span class="work-preview__year" id="work-preview-year"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRÁFEGO PAGO — eyebrow + headline + grid de 4 cards. -->
+    <section class="trafego" id="trafego">
+      <div class="trafego__inner">
+        <p class="trafego__eyebrow" data-reveal>// TRÁFEGO PAGO</p>
+
+        <h2 class="trafego__headline" data-reveal>
+          Não gerencio anúncio. Gerencio resultado.
+        </h2>
+
+        <div class="trafego__grid">
+          <div class="trafego__item" data-reveal>
+            <span class="trafego__item-index">01</span>
+            <h3 class="trafego__item-title">Gestão de Tráfego Pago</h3>
+            <p class="trafego__item-text">
+              Campanhas no Meta Ads e Google Ads com acompanhamento e
+              otimização contínua — não é subir anúncio e torcer.
+            </p>
+          </div>
+
+          <div class="trafego__item" data-reveal>
+            <span class="trafego__item-index">02</span>
+            <h3 class="trafego__item-title">Landing Pages de Alta Conversão</h3>
+            <p class="trafego__item-text">
+              Páginas com um objetivo só: transformar clique em lead ou
+              agendamento.
+            </p>
+          </div>
+
+          <div class="trafego__item" data-reveal>
+            <span class="trafego__item-index">03</span>
+            <h3 class="trafego__item-title">Sites Completos</h3>
+            <p class="trafego__item-text">
+              Do zero, design e código, construídos pra sustentar a campanha,
+              não só existir.
+            </p>
+          </div>
+
+          <div class="trafego__item" data-reveal>
+            <span class="trafego__item-index">04</span>
+            <h3 class="trafego__item-title">Sistemas de Integração com Meta</h3>
+            <p class="trafego__item-text">
+              Sistemas internos pra agências e clínicas que conectam com a API
+              de Conversões da Meta, enviando os dados de lead direto do
+              servidor — mais precisão que o pixel sozinho, e um painel interno
+              centralizando os resultados.
+            </p>
           </div>
         </div>
       </div>
@@ -213,6 +249,6 @@
     <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
 
     <!-- Script clássico (usa os globais acima; sem import/export). -->
-    <script src="main.js?v=3"></script>
+    <script src="main.js?v=6"></script>
   </body>
 </html>
