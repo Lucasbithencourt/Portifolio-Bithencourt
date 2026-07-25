@@ -352,7 +352,9 @@ button:focus-visible,
 }
 
 .trafego__item {
-  border: 1px solid var(--color-accent-soft);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
   padding: clamp(1.5rem, 3vw, 2.5rem);
   will-change: transform, opacity;
 }
@@ -414,24 +416,29 @@ button:focus-visible,
   list-style: none;
   max-width: 90rem;
   margin: 0 auto;
-  border-top: 1px solid var(--color-accent-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .work {
   will-change: transform, opacity;
 }
 
+/* Cada linha é um card de vidro. */
 .work__row {
   display: grid;
   grid-template-columns: 3rem 1fr auto auto;
   align-items: center;
   gap: clamp(1rem, 3vw, 3rem);
-  padding: clamp(1.1rem, 2.6vw, 2rem) 0.5rem;
+  padding: clamp(1.25rem, 2.6vw, 2rem);
   text-decoration: none;
-  border-bottom: 1px solid var(--color-accent-soft);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
   color: #8a9099;
-  transition: color 0.35s ease, padding-left 0.35s ease,
-    border-color 0.35s ease;
+  transition: transform 0.35s ease, color 0.35s ease,
+    border-color 0.35s ease, background-color 0.35s ease;
 }
 
 .work__index {
@@ -464,10 +471,11 @@ button:focus-visible,
   color: var(--color-muted);
 }
 
-/* Hover: o vermelho de acento assume (sem glow). */
+/* Hover: card sobe levemente, borda vermelha e fundo mais claro. */
 .work__row:hover {
-  padding-left: 1.25rem;
+  transform: translateY(-2px);
   border-color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .work__row:hover .work__name {
@@ -490,7 +498,7 @@ button:focus-visible,
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border: 1px solid var(--card-border);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   opacity: 0;                 /* GSAP controla o fade in/out */
   pointer-events: none;       /* nunca bloqueia o hover das linhas */
@@ -528,7 +536,9 @@ button:focus-visible,
   flex-direction: column;
   justify-content: space-between;
   padding: 1rem 1.15rem;
-  background: var(--color-bg);   /* preto sólido para legibilidade */
+  background: var(--card-bg);           /* vidro translúcido */
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
 }
 
 .work-preview__cat {
@@ -627,27 +637,23 @@ button:focus-visible,
 }
 
 /* Formação — lista limpa, sem hover/link, separadores sutis. */
+/* Tags de vidro — pílulas discretas no lugar da lista com marcador "//". */
 .about__formacao {
   list-style: none;
   margin-top: clamp(2.5rem, 6vw, 4rem);
-  border-top: 1px solid var(--color-accent-soft);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
 .about__formacao-item {
-  display: flex;
-  gap: 0.75rem;
-  padding: 0.9rem 0;
-  border-bottom: 1px solid var(--color-accent-soft);
-  font-size: clamp(0.85rem, 1.2vw, 1rem);
-  letter-spacing: 0.02em;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  font-size: clamp(0.8rem, 1.1vw, 0.9rem);
+  letter-spacing: 0.01em;
   color: #c8ccd0;
-}
-
-/* Marcador "//" em vermelho no lugar do bullet padrão. */
-.about__formacao-item::before {
-  content: "//";
-  flex-shrink: 0;
-  color: var(--color-accent);
 }
 
 .about [data-reveal] {
@@ -690,29 +696,33 @@ button:focus-visible,
 }
 
 .contact__links {
-  border-top: 1px solid var(--color-accent-soft);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
+/* Botões pílula — mesmo idioma do CTA secundário do hero. */
 .contact__link {
-  display: block;
-  padding: clamp(1.1rem, 2.6vw, 2rem) 0.5rem;
-  border-bottom: 1px solid var(--color-accent-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  border: 1px solid var(--card-border);
   text-decoration: none;
-  font-size: clamp(1.35rem, 5.5vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  color: #c8ccd0;
-  /* E-mails/telefones longos quebram em vez de estourar a viewport. */
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-fg);
   overflow-wrap: anywhere;
-  transition: color 0.35s ease, padding-left 0.35s ease,
-    border-color 0.35s ease;
+  transition: transform 0.25s ease, background-color 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .contact__link:hover {
-  padding-left: 1.25rem;
-  color: var(--color-accent);
+  transform: translateY(-2px);
   border-color: var(--color-accent);
+  background: var(--card-bg);
 }
 
 .contact [data-reveal] {
@@ -759,6 +769,8 @@ button:focus-visible,
   .contact { padding: 4rem 1.25rem; }
   .trafego { padding: 4rem 1.25rem; }
   .trafego__grid { grid-template-columns: 1fr; }
+  .contact__links { flex-direction: column; }
+  .contact__link { width: 100%; }
   .site-footer { padding: 2rem 1.25rem; }
   .site-footer__inner { justify-content: flex-start; }
 }
@@ -933,7 +945,7 @@ button:focus-visible,
 /* Frame de navegador — borda neutra + leve sombra (o corpo herda o corte). */
 .case-media-frame {
   border: 1px solid var(--card-border);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   overflow: hidden;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
