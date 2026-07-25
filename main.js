@@ -446,6 +446,92 @@ function initWorkPreview() {
 }
 
 /* =========================================================================
+   MÓDULO: HERO DE ÍCONES FLUTUANTES
+   Blindado: só roda se .hero__icon existir. Entrada em fade+scale (stagger)
+   e repulsão suave dos ícones ao cursor (gsap.quickTo). Sob reduced-motion,
+   fica tudo parado na posição final (sem repulsão).
+   ========================================================================= */
+function initHeroIcons() {
+  const hero = document.getElementById("hero");
+  if (!hero) return;
+  const icons = gsap.utils.toArray(".hero__icon");
+  if (!icons.length) return;
+  const content = gsap.utils.toArray(".hero__content > *");
+
+  // "Ver Cases" — scroll suave até a seção via Lenis (evita salto nativo).
+  const seeCases = hero.querySelector(".hero__cta-secondary");
+  if (seeCases) {
+    seeCases.addEventListener("click", (e) => {
+      const target = document.querySelector(seeCases.getAttribute("href"));
+      if (target) {
+        e.preventDefault();
+        lenis.scrollTo(target, { duration: 1.2 });
+      }
+    });
+  }
+
+  // Acessibilidade: sem movimento — tudo visível na posição final.
+  if (prefersReducedMotion) {
+    gsap.set([...content, ...icons], { autoAlpha: 1, scale: 1, x: 0, y: 0 });
+    return;
+  }
+
+  // Entrada: fade + scale-in escalonado (é a primeira coisa vista).
+  gsap.set([...content, ...icons], { autoAlpha: 0, scale: 0.9 });
+  gsap.to(content, {
+    autoAlpha: 1,
+    scale: 1,
+    duration: 0.8,
+    ease: "power3.out",
+    stagger: 0.1,
+  });
+  gsap.to(icons, {
+    autoAlpha: 1,
+    scale: 1,
+    duration: 0.9,
+    ease: "power3.out",
+    stagger: 0.06,
+    delay: 0.15,
+  });
+
+  // Repulsão do cursor: quickTo por ícone (x/y), com leve inércia.
+  const RADIUS = 120; // raio de influência do cursor (px)
+  const MAX_PUSH = 45; // deslocamento máximo (px)
+  const setters = icons.map((el) => ({
+    el,
+    xTo: gsap.quickTo(el, "x", { duration: 0.6, ease: "power3" }),
+    yTo: gsap.quickTo(el, "y", { duration: 0.6, ease: "power3" }),
+  }));
+
+  window.addEventListener(
+    "mousemove",
+    (e) => {
+      setters.forEach(({ el, xTo, yTo }) => {
+        // Centro BASE do ícone = centro atual menos o offset já aplicado.
+        const tx = gsap.getProperty(el, "x");
+        const ty = gsap.getProperty(el, "y");
+        const r = el.getBoundingClientRect();
+        const baseCx = r.left + r.width / 2 - tx;
+        const baseCy = r.top + r.height / 2 - ty;
+        const dx = baseCx - e.clientX;
+        const dy = baseCy - e.clientY;
+        const dist = Math.hypot(dx, dy);
+        if (dist < RADIUS && dist > 0.001) {
+          const force = 1 - dist / RADIUS; // mais perto = mais forte
+          const push = force * MAX_PUSH;
+          xTo((dx / dist) * push);
+          yTo((dy / dist) * push);
+        } else {
+          xTo(0);
+          yTo(0);
+        }
+      });
+    },
+    { passive: true }
+  );
+}
+
+/* =========================================================================
    BOOTSTRAP — blindado por página (cursor 100% nativo do sistema)
    ========================================================================= */
 const heroCanvas = document.getElementById("hero-canvas");
@@ -458,3 +544,4 @@ if (heroCanvas) {
 
 initPortfolioReveal();
 initWorkPreview();
+initHeroIcons();

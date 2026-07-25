@@ -28,11 +28,11 @@ Ex.: `?v=1` → `?v=2` na próxima vez, `?v=3` na seguinte, e assim por diante.
 
 ## Find-and-replace rápido (terminal, na raiz do projeto)
 
-Troque `6` (versão atual) por `7` (versão nova) nas duas ocorrências:
+Troque `8` (versão atual) por `9` (versão nova) nas duas ocorrências:
 
 ```bash
 # macOS (sed -i '')
-sed -i '' 's|style.css?v=6|style.css?v=7|; s|main.js?v=6|main.js?v=7|' \
+sed -i '' 's|style.css?v=8|style.css?v=9|; s|main.js?v=8|main.js?v=9|' \
   index.html case.html case-02.html case-03.html case-04.html
 ```
 
@@ -44,7 +44,7 @@ grep -o 'style.css?v=[0-9]*\|main.js?v=[0-9]*' *.html
 
 Todos devem mostrar o MESMO número novo.
 
-## Versão atual: v=6
+## Versão atual: v=8
 
 (Atualize esta linha junto com o find-and-replace, pra você sempre saber
 qual é o número corrente.)

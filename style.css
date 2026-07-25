@@ -4,12 +4,18 @@
    ========================================================= */
 
 :root {
-  --color-bg: #000000;             /* preto absoluto */
+  --color-bg: #0b0b0d;             /* preto neutro, levemente azulado */
   --color-fg: #f2f2f2;
-  --color-muted: #868d96;          /* cinza neutro — contraste AA (~6.3:1) no preto */
-  --color-accent: #e60000;         /* VERMELHO agressivo e premium */
-  --color-accent-soft: rgba(230, 0, 0, 0.25); /* separadores/bordas */
+  --color-muted: #9a9a9e;          /* cinza neutro */
+  --color-accent: #e2453f;         /* vermelho de acento (menos agressivo) */
+  --color-accent-soft: rgba(255, 255, 255, 0.08); /* bordas/separadores neutros */
   --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --radius-card: 20px;
+  --radius-pill: 999px;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.09);
 }
 
 *,
@@ -28,7 +34,7 @@ html {
 body {
   background: var(--color-bg);
   color: var(--color-fg);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -91,6 +97,157 @@ button:focus-visible,
 }
 
 /* =========================================================
+   HERO — leve, estático, com ícones flutuantes que reagem ao cursor.
+   ========================================================= */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 6vw, 5rem);
+  background: var(--color-bg);
+  overflow: hidden;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  max-width: 42rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero__badge {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(226, 69, 63, 0.1);
+  border: 1px solid rgba(226, 69, 63, 0.25);
+  color: var(--color-accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.75rem;
+}
+
+.hero__title {
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  background: linear-gradient(180deg, var(--color-fg), var(--color-muted));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 1.5rem;
+}
+
+.hero__sub {
+  max-width: 34rem;
+  margin: 0 auto 2.25rem;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+
+.hero__ctas {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero__cta-primary,
+.hero__cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: var(--radius-pill);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.25s ease, background-color 0.25s ease,
+    border-color 0.25s ease, opacity 0.25s ease;
+}
+
+.hero__cta-primary {
+  background: var(--color-fg);
+  color: var(--color-bg);
+}
+.hero__cta-primary:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.hero__cta-secondary {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--color-fg);
+}
+.hero__cta-secondary:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-fg);
+}
+
+/* Ícones flutuantes (posição absoluta espalhada). */
+.hero__icon {
+  position: absolute;
+  z-index: 1;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-fg);
+  will-change: transform;
+}
+
+.hero__icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.hero__icon--sm {
+  width: 44px;
+  height: 44px;
+}
+.hero__icon--sm svg {
+  width: 20px;
+  height: 20px;
+}
+
+.hero__icon--1 { top: 15%; left: 12%; }
+.hero__icon--2 { top: 12%; right: 13%; }
+.hero__icon--3 { top: 44%; left: 6%; }
+.hero__icon--4 { top: 40%; right: 7%; }
+.hero__icon--5 { bottom: 16%; left: 15%; }
+.hero__icon--6 { bottom: 18%; right: 12%; }
+.hero__icon--7 { top: 10%; left: 45%; }
+.hero__icon--8 { bottom: 10%; right: 38%; }
+
+/* Mobile: menos ícones (só 4 cantos) e botões empilhados. */
+@media (max-width: 640px) {
+  .hero { padding: 4rem 1.25rem; }
+  .hero__icon--3,
+  .hero__icon--4,
+  .hero__icon--7,
+  .hero__icon--8 { display: none; }
+  .hero__icon--1 { top: 9%; left: 6%; }
+  .hero__icon--2 { top: 8%; right: 6%; }
+  .hero__icon--5 { bottom: 10%; left: 7%; }
+  .hero__icon--6 { bottom: 12%; right: 7%; }
+  .hero__ctas { flex-direction: column; align-items: stretch; }
+}
+
+/* =========================================================
    MANIFESTO — revelado após a poeira sumir no escuro.
    pointer-events livres só quando visível (autoAlpha via GSAP
    já controla visibility, que bloqueia interação enquanto oculto).
@@ -136,10 +293,9 @@ button:focus-visible,
   color: #9aa0a6;
 }
 
-/* O remate agora carrega o VERMELHO da identidade. */
+/* O remate carrega o vermelho de acento (sem glow). */
 .manifesto__accent {
   color: var(--color-accent);
-  text-shadow: 0 0 24px rgba(230, 0, 0, 0.35);
 }
 
 .manifesto__sub {
@@ -291,7 +447,7 @@ button:focus-visible,
   letter-spacing: -0.01em;
   line-height: 1.05;
   color: #c8ccd0;
-  transition: color 0.35s ease, text-shadow 0.35s ease;
+  transition: color 0.35s ease;
 }
 
 .work__cat,
@@ -308,7 +464,7 @@ button:focus-visible,
   color: var(--color-muted);
 }
 
-/* Hover: o VERMELHO assume — nome aceso com glow de neon. */
+/* Hover: o vermelho de acento assume (sem glow). */
 .work__row:hover {
   padding-left: 1.25rem;
   border-color: var(--color-accent);
@@ -316,7 +472,6 @@ button:focus-visible,
 
 .work__row:hover .work__name {
   color: var(--color-accent);
-  text-shadow: 0 0 28px rgba(230, 0, 0, 0.45);
 }
 
 .work__row:hover .work__index,
@@ -334,9 +489,9 @@ button:focus-visible,
   width: 280px;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border: 1px solid var(--color-accent-soft);
-  border-radius: 4px;
-  box-shadow: 0 0 32px rgba(230, 0, 0, 0.2);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
   opacity: 0;                 /* GSAP controla o fade in/out */
   pointer-events: none;       /* nunca bloqueia o hover das linhas */
   z-index: 50;                /* acima do conteúdo da seção */
@@ -469,7 +624,6 @@ button:focus-visible,
   line-height: 1.2;
   letter-spacing: -0.01em;
   color: var(--color-accent);
-  text-shadow: 0 0 24px rgba(230, 0, 0, 0.35);
 }
 
 /* Formação — lista limpa, sem hover/link, separadores sutis. */
@@ -552,14 +706,13 @@ button:focus-visible,
   /* E-mails/telefones longos quebram em vez de estourar a viewport. */
   overflow-wrap: anywhere;
   transition: color 0.35s ease, padding-left 0.35s ease,
-    border-color 0.35s ease, text-shadow 0.35s ease;
+    border-color 0.35s ease;
 }
 
 .contact__link:hover {
   padding-left: 1.25rem;
   color: var(--color-accent);
   border-color: var(--color-accent);
-  text-shadow: 0 0 28px rgba(230, 0, 0, 0.45);
 }
 
 .contact [data-reveal] {
@@ -654,7 +807,6 @@ button:focus-visible,
   width: 0%;
   height: 100%;
   background: var(--color-accent);
-  box-shadow: 0 0 12px var(--color-accent);
   transition: width 0.15s linear;
 }
 
@@ -763,13 +915,11 @@ button:focus-visible,
   text-decoration: none;
   padding-bottom: 0.25rem;
   border-bottom: 1px solid var(--color-accent-soft);
-  transition: border-color 0.35s ease, text-shadow 0.35s ease,
-    transform 0.35s ease;
+  transition: border-color 0.35s ease, transform 0.35s ease;
 }
 
 .case-context__link:hover {
   border-color: var(--color-accent);
-  text-shadow: 0 0 24px rgba(230, 0, 0, 0.5);
   transform: translateX(4px);
 }
 
@@ -780,12 +930,12 @@ button:focus-visible,
   margin: 0 auto;
 }
 
-/* Frame de navegador — a borda/glow vive aqui (o corpo herda o corte). */
+/* Frame de navegador — borda neutra + leve sombra (o corpo herda o corte). */
 .case-media-frame {
-  border: 1px solid rgba(230, 0, 0, 0.15);
-  border-radius: 6px;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 0 40px rgba(230, 0, 0, 0.06);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
 /* Barra de chrome no topo. */
@@ -881,14 +1031,36 @@ button:focus-visible,
   line-height: 1;
   letter-spacing: -0.01em;
   color: #8a9099;
-  transition: color 0.4s ease, text-shadow 0.4s ease,
-    transform 0.4s ease;
+  transition: color 0.4s ease, transform 0.4s ease;
 }
 
 .case-next:hover .case-next__title {
   color: var(--color-accent);
-  text-shadow: 0 0 32px rgba(230, 0, 0, 0.45);
   transform: translateX(0.5rem);
+}
+
+/* =========================================================
+   BADGES (eyebrows) — pílula de acento no lugar do "// LABEL".
+   Regra agrupada: vem depois das definições individuais e
+   sobrescreve a aparência, mantendo o margin-bottom de cada uma.
+   ========================================================= */
+.manifesto__eyebrow,
+.works__eyebrow,
+.about__eyebrow,
+.contact__eyebrow,
+.trafego__eyebrow,
+.case-eyebrow,
+.case-next__eyebrow {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(226, 69, 63, 0.1);
+  border: 1px solid rgba(226, 69, 63, 0.25);
+  color: var(--color-accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 /* =========================================================
