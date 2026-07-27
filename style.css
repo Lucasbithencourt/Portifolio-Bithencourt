@@ -196,54 +196,68 @@ button:focus-visible,
 .hero__icon {
   position: absolute;
   z-index: 1;
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  /* Card um pouco mais forte que os demais (só aqui) pra ganhar presença
+     contra o fundo escuro — não mexe nas variáveis globais. */
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-fg);
   will-change: transform;
 }
 
-.hero__icon svg {
-  width: 26px;
-  height: 26px;
+/* Os PNGs da Flaticon são silhuetas pretas — invertemos pra branco
+   uniforme (mesma cor pra todos) pra ficarem visíveis no fundo escuro.
+   O opacity suaviza o branco puro sem perder contraste. */
+.hero__icon img {
+  width: 29px;
+  height: 29px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
 }
 
-.hero__icon--sm {
-  width: 44px;
-  height: 44px;
-}
-.hero__icon--sm svg {
-  width: 20px;
-  height: 20px;
-}
+/* 14 posições espalhadas de forma equilibrada ao redor do conteúdo central. */
+.hero__icon--1  { top: 12%;    left: 8%;  }
+.hero__icon--2  { top: 30%;    left: 4%;  }
+.hero__icon--3  { top: 50%;    left: 8%;  }
+.hero__icon--4  { top: 70%;    left: 5%;  }
+.hero__icon--5  { bottom: 10%; left: 14%; }
+.hero__icon--6  { top: 12%;    right: 9%; }
+.hero__icon--7  { top: 30%;    right: 4%; }
+.hero__icon--8  { top: 50%;    right: 7%; }
+.hero__icon--9  { top: 70%;    right: 5%; }
+.hero__icon--10 { bottom: 10%; right: 13%; }
+.hero__icon--11 { top: 6%;     left: 38%; }
+.hero__icon--12 { top: 8%;     right: 34%; }
+.hero__icon--13 { bottom: 6%;  left: 40%; }
+.hero__icon--14 { bottom: 8%;  right: 36%; }
 
-.hero__icon--1 { top: 15%; left: 12%; }
-.hero__icon--2 { top: 12%; right: 13%; }
-.hero__icon--3 { top: 44%; left: 6%; }
-.hero__icon--4 { top: 40%; right: 7%; }
-.hero__icon--5 { bottom: 16%; left: 15%; }
-.hero__icon--6 { bottom: 18%; right: 12%; }
-.hero__icon--7 { top: 10%; left: 45%; }
-.hero__icon--8 { bottom: 10%; right: 38%; }
-
-/* Mobile: menos ícones (só 4 cantos) e botões empilhados. */
+/* Mobile: mostra só 7 dos 14 (instagram, whatsapp, github, meta, google,
+   figma, facebook) e empilha os botões. */
 @media (max-width: 640px) {
   .hero { padding: 4rem 1.25rem; }
-  .hero__icon--3,
+  .hero__icon--2,
   .hero__icon--4,
   .hero__icon--7,
-  .hero__icon--8 { display: none; }
-  .hero__icon--1 { top: 9%; left: 6%; }
-  .hero__icon--2 { top: 8%; right: 6%; }
-  .hero__icon--5 { bottom: 10%; left: 7%; }
-  .hero__icon--6 { bottom: 12%; right: 7%; }
+  .hero__icon--9,
+  .hero__icon--12,
+  .hero__icon--13,
+  .hero__icon--14 { display: none; }
+  /* Reposiciona os 7 visíveis; zera os lados herdados do desktop pra
+     evitar conflito (ex.: top+bottom ou left+right no mesmo ícone). */
+  .hero__icon--1  { top: 8%; bottom: auto; left: 6%; right: auto; }    /* instagram */
+  .hero__icon--11 { top: 7%; bottom: auto; left: auto; right: 7%; }    /* facebook  */
+  .hero__icon--3  { top: 34%; bottom: auto; left: 5%; right: auto; }   /* whatsapp  */
+  .hero__icon--8  { top: 32%; bottom: auto; left: auto; right: 6%; }   /* google    */
+  .hero__icon--5  { top: auto; bottom: 9%; left: 7%; right: auto; }    /* github    */
+  .hero__icon--10 { top: auto; bottom: 11%; left: auto; right: 7%; }   /* figma     */
+  .hero__icon--6  { top: auto; bottom: 9%; left: 42%; right: auto; }   /* meta      */
   .hero__ctas { flex-direction: column; align-items: stretch; }
 }
 
@@ -761,6 +775,14 @@ button:focus-visible,
 
 .site-footer__inner a:hover {
   color: var(--color-accent);
+}
+
+/* Atribuição obrigatória dos ícones (Flaticon) — discreta, linha própria. */
+.site-footer__credit {
+  flex-basis: 100%;
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  opacity: 0.6;
 }
 
 /* Espaçamento das novas seções em telas estreitas (consistente c/ o resto). */
