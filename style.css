@@ -44,6 +44,15 @@ body {
   color: #000000;
 }
 
+/* Fundo de estrelas — canvas fixo atrás de TODO o conteúdo. O backdrop
+   escuro vem do html/body; as seções ficam transparentes por cima. */
+#stars-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
 /* Acessível a leitores de tela, invisível no layout (padrão clip). */
 .sr-only {
   position: absolute;
@@ -106,7 +115,6 @@ button:focus-visible,
   align-items: center;
   justify-content: center;
   padding: clamp(2rem, 6vw, 5rem);
-  background: var(--color-bg);
   overflow: hidden;
 }
 
@@ -116,6 +124,25 @@ button:focus-visible,
   max-width: 42rem;
   margin: 0 auto;
   text-align: center;
+}
+
+/* Rastro de dígitos binários sob o cursor — camada acima do fundo/ícones
+   (z-index 1) mas ABAIXO do conteúdo central (z-index 2). Criada via JS. */
+.hero__binary {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hero__binary span {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  color: var(--color-accent);
+  pointer-events: none;
+  will-change: transform, opacity;
 }
 
 .hero__badge {
@@ -142,6 +169,43 @@ button:focus-visible,
   background-clip: text;
   color: transparent;
   margin-bottom: 1.5rem;
+}
+
+/* Palavra que cicla (converte/escala/vende/comunica), digitada letra por
+   letra. O min-width é medido e aplicado pelo JS com a maior palavra (já
+   contando o cursor), pra frase não pular enquanto o texto cresce/encolhe.
+   inline-block é o que faz esse min-width valer sem quebrar o fluxo. */
+.hero__title-rotate {
+  display: inline-block;
+  text-align: left; /* palavra ancorada logo após "que", folga fica no fim */
+  color: var(--color-accent);
+}
+
+/* Cursor do typewriter — mesma cor/peso do texto, piscando. */
+.hero__title-cursor {
+  display: inline-block;
+  color: var(--color-accent);
+  font-weight: inherit;
+  font-size: inherit;
+  user-select: none;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Sem movimento: cursor fixo aceso (o JS já não digita nesse modo). */
+@media (prefers-reduced-motion: reduce) {
+  .hero__title-cursor {
+    animation: none;
+  }
 }
 
 .hero__sub {
@@ -176,10 +240,47 @@ button:focus-visible,
 .hero__cta-primary {
   background: var(--color-fg);
   color: var(--color-bg);
+  /* Contorno neon vermelho sutil em repouso, "respirando" devagar. */
+  box-shadow:
+    0 0 0 1px rgba(226, 69, 63, 0.35),
+    0 0 8px rgba(226, 69, 63, 0.25),
+    0 0 16px rgba(226, 69, 63, 0.12);
+  transition: transform 0.25s ease, opacity 0.25s ease, box-shadow 0.3s ease;
+  animation: cta-neon-pulse 3s ease-in-out infinite;
 }
 .hero__cta-primary:hover {
   transform: translateY(-2px);
   opacity: 0.9;
+  /* Neon "aceso" — bem mais forte; pausa o pulso (estado forte fixo). */
+  box-shadow:
+    0 0 0 1.5px rgba(226, 69, 63, 0.9),
+    0 0 14px rgba(226, 69, 63, 0.6),
+    0 0 30px rgba(226, 69, 63, 0.4),
+    0 0 50px rgba(226, 69, 63, 0.2);
+  animation-play-state: paused;
+}
+
+@keyframes cta-neon-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(226, 69, 63, 0.35),
+      0 0 8px rgba(226, 69, 63, 0.25),
+      0 0 16px rgba(226, 69, 63, 0.12);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(226, 69, 63, 0.45),
+      0 0 10px rgba(226, 69, 63, 0.32),
+      0 0 20px rgba(226, 69, 63, 0.16);
+  }
+}
+
+/* Sob reduced-motion: sem o pulso (glow fraco fixo); hover segue normal. */
+@media (prefers-reduced-motion: reduce) {
+  .hero__cta-primary {
+    animation: none;
+  }
 }
 
 .hero__cta-secondary {
@@ -190,6 +291,115 @@ button:focus-visible,
 .hero__cta-secondary:hover {
   transform: translateY(-2px);
   border-color: var(--color-fg);
+}
+
+/* =========================================================
+   NAVBAR FIXA — invisível sobre o hero, revela ao rolar.
+   ========================================================= */
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 1rem clamp(1.5rem, 6vw, 6rem);
+  background: rgba(11, 11, 13, 0.7);
+  /* Vidro "vivo" — blur mais forte + saturação (tipo iOS/macOS). */
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  /* Profundidade — leve sensação de flutuação. */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  /* Estado inicial: escondida acima da viewport. */
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Sheen: reflexo de vidro bem sutil no topo. */
+.site-nav::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.06), transparent);
+  pointer-events: none;
+}
+
+/* Borda inferior em gradiente: transparente nas pontas, sutil no centro. */
+.site-nav::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.14),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.site-nav--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.site-nav__inner {
+  max-width: 90rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* links à esquerda, CTA à direita */
+  gap: 1.5rem;
+}
+
+.site-nav__links {
+  display: flex;
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.site-nav__links a {
+  color: var(--color-fg);
+  text-decoration: none;
+  font-size: 0.92rem;
+  transition: color 0.25s ease;
+}
+.site-nav__links a:hover {
+  color: var(--color-accent);
+}
+
+/* CTA da nav — mesma pílula do .hero__cta-secondary. */
+.site-nav__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  border-radius: var(--radius-pill);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--color-fg);
+  white-space: nowrap;
+  transition: transform 0.25s ease, border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+.site-nav__cta:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-fg);
+  background: var(--card-bg);
+}
+
+/* Mobile: só logo + CTA. */
+@media (max-width: 640px) {
+  .site-nav { padding: 0.85rem 1.25rem; }
+  .site-nav__links { display: none; }
 }
 
 /* Ícones flutuantes (posição absoluta espalhada). */
@@ -205,6 +415,15 @@ button:focus-visible,
   border: 1px solid rgba(255, 255, 255, 0.14);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+/* Wrapper interno: recebe a flutuação idle (x/y) via GSAP, deixando o
+   x/y do .hero__icon externo livre só pra repulsão do cursor. */
+.hero__icon-float {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -270,7 +489,6 @@ button:focus-visible,
   position: relative;
   z-index: 2;
   min-height: 100vh;
-  background: var(--color-bg);
   display: flex;
   align-items: center;
   padding: clamp(2rem, 8vw, 8rem);
@@ -330,7 +548,6 @@ button:focus-visible,
 .trafego {
   position: relative;
   z-index: 2;
-  background: var(--color-bg);
   padding: clamp(4rem, 12vh, 12rem) clamp(1.5rem, 6vw, 6rem);
   border-top: 1px solid var(--color-accent-soft);
 }
@@ -395,6 +612,83 @@ button:focus-visible,
   color: var(--color-muted);
 }
 
+/* Faixa de números — abaixo do grid, separada por borda superior sutil. */
+.trafego__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding-top: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--card-border);
+  text-align: center;
+}
+
+.trafego__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.trafego__stat-value {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--color-fg);
+  font-variant-numeric: tabular-nums; /* números não "dançam" ao trocar */
+}
+
+/* O contador "vivo" (campanhas ativas) em destaque accent. */
+.trafego__stat--live .trafego__stat-value {
+  color: var(--color-accent);
+}
+
+.trafego__stat-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-muted);
+}
+
+/* Bolinha verde "ao vivo" pulsando ao lado de "Campanhas ativas". */
+.trafego__stat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3ecf6e;
+  box-shadow: 0 0 6px rgba(62, 207, 110, 0.7);
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trafego__stat-dot {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .trafego__stats {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
 /* =========================================================
    A MÁQUINA — lista de projetos, separadores vermelhos sutis,
    hover em vermelho agressivo.
@@ -402,7 +696,6 @@ button:focus-visible,
 .works {
   position: relative;
   z-index: 2;
-  background: var(--color-bg);
   padding: clamp(4rem, 12vh, 12rem) clamp(1.5rem, 6vw, 6rem);
 }
 
@@ -424,6 +717,325 @@ button:focus-visible,
   font-weight: 800;
   letter-spacing: -0.01em;
   color: var(--color-fg);
+}
+
+/* ---------------------------------------------------------
+   CARROSSEL DE CASES (Swiper — efeito coverflow)
+   O slide central fica em foco; os laterais recuam via translateZ
+   (depth do coverflow) + opacidade menor, criando as camadas.
+   --------------------------------------------------------- */
+.cases-swiper {
+  max-width: 90rem;
+  margin: 0 auto;
+  padding-bottom: 3.5rem; /* espaço para a paginação */
+  /* Tokens do site no lugar do azul padrão do Swiper. */
+  --swiper-theme-color: var(--color-accent);
+  --swiper-navigation-color: var(--color-fg);
+  --swiper-navigation-size: 28px;
+  --swiper-pagination-color: var(--color-accent);
+  --swiper-pagination-bullet-inactive-color: var(--color-fg);
+  --swiper-pagination-bullet-inactive-opacity: 0.25;
+}
+
+.case-slide {
+  width: 340px;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  opacity: 0.45; /* laterais recuados */
+  transition: opacity 0.4s ease, border-color 0.4s ease;
+}
+
+.case-slide img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* Slide central — em destaque. */
+.cases-swiper .swiper-slide-active.case-slide {
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* Faixa de info — mesmo vidro dos outros cards do site. */
+.case-slide__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.1rem 1.25rem 1.25rem;
+  border-top: 1px solid var(--card-border);
+}
+
+.case-slide__index {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+}
+
+.case-slide__name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-fg);
+}
+
+.case-slide__cat {
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: var(--color-muted);
+}
+
+/* Setas: pílula de vidro, no lugar do estilo padrão do Swiper. */
+.cases-swiper .swiper-button-prev,
+.cases-swiper .swiper-button-next {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+.cases-swiper .swiper-button-prev:hover,
+.cases-swiper .swiper-button-next:hover {
+  border-color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.08);
+}
+.cases-swiper .swiper-button-prev::after,
+.cases-swiper .swiper-button-next::after {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .case-slide { width: min(78vw, 340px); }
+  .cases-swiper .swiper-button-prev,
+  .cases-swiper .swiper-button-next { display: none; }
+}
+
+/* Slide é clicável (abre o modal) — cursor e foco visível. */
+.case-slide[role="button"] { cursor: pointer; }
+.case-slide:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------
+   MODAL DE CASE — abre por cima da página (sem navegar).
+   --------------------------------------------------------- */
+.case-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 2.5rem);
+}
+.case-modal.is-open {
+  display: flex;
+}
+
+.case-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 5, 7, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.case-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 900px;
+  max-height: 88vh;
+  overflow-y: auto; /* rolagem interna em telas pequenas */
+  border-radius: var(--radius-card);
+  background: rgba(16, 16, 19, 0.92);
+  border: 1px solid var(--card-border);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.case-modal__close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: rgba(11, 11, 13, 0.7);
+  border: 1px solid var(--card-border);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: var(--color-fg);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+.case-modal__close:hover {
+  border-color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.case-modal__media {
+  position: relative; /* iframe ao vivo se sobrepõe ao screenshot */
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+}
+.case-modal__media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* Iframe do site ao vivo — ocupa exatamente a caixa do screenshot, então
+   a troca é um crossfade sem pulo de layout. Só aparece se o embed passar. */
+.case-modal__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  /* Sem fundo próprio de propósito: o screenshot fica por baixo, então um
+     frame recusado/vazio degrada pro screenshot em vez de um bloco branco.
+     Site que carrega pinta o próprio fundo e cobre a imagem normalmente. */
+  background: transparent;
+}
+
+/* Aviso de "ao vivo" — sobreposto no topo da mídia. */
+.case-modal__live-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(11, 11, 13, 0.78);
+  border: 1px solid var(--card-border);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--color-fg);
+  pointer-events: none;
+}
+
+.case-modal__body {
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.case-modal__eyebrow {
+  display: inline-block;
+  padding: 5px 14px;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-pill);
+  background: rgba(226, 69, 63, 0.1);
+  border: 1px solid rgba(226, 69, 63, 0.25);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--color-accent);
+}
+
+.case-modal__title {
+  font-size: clamp(1.5rem, 4vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+}
+
+.case-modal__meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.25rem;
+  margin: 1.75rem 0;
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
+}
+.case-modal__meta dt {
+  margin-bottom: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.case-modal__meta dd {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--color-fg);
+}
+
+.case-modal__text {
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+
+.case-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.case-modal__live,
+.case-modal__whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: var(--radius-pill);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.25s ease, background-color 0.25s ease,
+    border-color 0.25s ease, opacity 0.25s ease;
+}
+.case-modal__live {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  color: var(--color-fg);
+}
+.case-modal__live:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+  background: var(--card-bg);
+}
+.case-modal__whatsapp {
+  background: var(--color-fg);
+  color: var(--color-bg);
+}
+.case-modal__whatsapp:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+@media (max-width: 640px) {
+  .case-modal__actions { flex-direction: column; }
+  .case-modal__live,
+  .case-modal__whatsapp { width: 100%; }
 }
 
 .works__list {
@@ -605,7 +1217,6 @@ button:focus-visible,
 .about {
   position: relative;
   z-index: 2;
-  background: var(--color-bg);
   padding: clamp(4rem, 12vh, 12rem) clamp(1.5rem, 6vw, 6rem);
   border-top: 1px solid var(--color-accent-soft);
 }
@@ -681,7 +1292,6 @@ button:focus-visible,
 .contact {
   position: relative;
   z-index: 2;
-  background: var(--color-bg);
   padding: clamp(4rem, 12vh, 12rem) clamp(1.5rem, 6vw, 6rem);
   border-top: 1px solid var(--color-accent-soft);
 }
@@ -749,7 +1359,6 @@ button:focus-visible,
 .site-footer {
   position: relative;
   z-index: 2;
-  background: var(--color-bg);
   border-top: 1px solid var(--color-accent-soft);
   padding: clamp(2rem, 5vh, 3rem) clamp(1.5rem, 6vw, 6rem);
 }
@@ -854,6 +1463,8 @@ button:focus-visible,
    PÁGINA DE CASE (case.html)
    ========================================================= */
 .case-header {
+  position: relative;
+  z-index: 1;
   padding: clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 6vw, 6rem);
 }
 
@@ -872,6 +1483,8 @@ button:focus-visible,
 }
 
 .case-hero {
+  position: relative;
+  z-index: 1;
   padding: clamp(2rem, 8vh, 6rem) clamp(1.5rem, 6vw, 6rem) 0;
   max-width: 100rem;
   margin: 0 auto;
@@ -926,6 +1539,8 @@ button:focus-visible,
 
 /* Contexto do case — texto de leitura confortável + link ao vivo. */
 .case-context {
+  position: relative;
+  z-index: 1;
   max-width: 100rem;
   margin: 0 auto;
   padding: clamp(2.5rem, 6vh, 4rem) clamp(1.5rem, 6vw, 6rem) 0;
@@ -959,6 +1574,8 @@ button:focus-visible,
 
 /* Container de mídia principal (16:9, largura total). */
 .case-media-wrap {
+  position: relative;
+  z-index: 1;
   padding: clamp(3rem, 8vh, 6rem) clamp(1.5rem, 6vw, 6rem);
   max-width: 100rem;
   margin: 0 auto;
@@ -1042,6 +1659,8 @@ button:focus-visible,
 
 /* Footer de navegação — PRÓXIMO PROJETO gigante. */
 .case-next {
+  position: relative;
+  z-index: 1;
   display: block;
   text-decoration: none;
   padding: clamp(4rem, 14vh, 9rem) clamp(1.5rem, 6vw, 6rem);

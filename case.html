@@ -29,10 +29,26 @@
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- Herda o design system da home. -->
-    <link rel="stylesheet" href="style.css?v=11" />
+    <link rel="stylesheet" href="style.css?v=26" />
   </head>
 
   <body class="case-page">
+    <!-- Fundo de estrelas (decorativo) -- fica atrás de tudo. -->
+    <canvas id="stars-bg" aria-hidden="true"></canvas>
+
+    <!-- NAVBAR fixa -- aparece quase de imediato nos cases (sem hero). -->
+    <nav class="site-nav" id="site-nav">
+      <div class="site-nav__inner">
+        <div class="site-nav__links">
+          <a href="index.html#works">Cases</a>
+          <a href="index.html#trafego">Tráfego Pago</a>
+          <a href="index.html#about">Sobre</a>
+          <a href="index.html#contact">Contato</a>
+        </div>
+        <a class="site-nav__cta" href="https://wa.me/5548999337562" target="_blank" rel="noopener">Falar no WhatsApp</a>
+      </div>
+    </nav>
+
     <!-- HEADER — voltar para a home. -->
     <header class="case-header">
       <a class="back-link" href="index.html">← VOLTAR</a>
@@ -128,6 +144,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
-    <script src="main.js?v=11"></script>
+    <script src="main.js?v=26"></script>
   </body>
 </html>
