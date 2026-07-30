@@ -612,6 +612,26 @@ button:focus-visible,
   color: var(--color-muted);
 }
 
+/* Tags técnicas — pills centralizadas entre o grid e a faixa de números. */
+.trafego__tags {
+  list-style: none;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.trafego__tag {
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  font-size: 0.8rem;
+  letter-spacing: 0.01em;
+  color: var(--color-muted);
+}
+
 /* Faixa de números — abaixo do grid, separada por borda superior sutil. */
 .trafego__stats {
   display: grid;
