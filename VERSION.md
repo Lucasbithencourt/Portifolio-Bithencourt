@@ -32,7 +32,7 @@ Troque `31` (versão atual) por `32` (versão nova) nas duas ocorrências:
 
 ```bash
 # macOS (sed -i '')
-sed -i '' 's|style.css?v=36|style.css?v=37|; s|main.js?v=36|main.js?v=37|' \
+sed -i '' 's|style.css?v=37|style.css?v=38|; s|main.js?v=37|main.js?v=38|' \
   index.html case.html case-02.html case-03.html case-04.html
 ```
 
@@ -44,7 +44,7 @@ grep -o 'style.css?v=[0-9]*\|main.js?v=[0-9]*' *.html
 
 Todos devem mostrar o MESMO número novo.
 
-## Versão atual: v=36
+## Versão atual: v=37
 
 (Atualize esta linha junto com o find-and-replace, pra você sempre saber
 qual é o número corrente.)
