@@ -1325,8 +1325,8 @@ if (heroCanvas) {
    política de RLS no Supabase: anon PODE inserir e NÃO pode ler. Sem essa
    política, qualquer um leria a lista de leads.
    ========================================================================= */
-const LEADS_SUPABASE_URL = "";      // ex.: https://xxxx.supabase.co
-const LEADS_SUPABASE_KEY = "";      // chave anon (publishable)
+const LEADS_SUPABASE_URL = "https://qmefpolskyywikeendja.supabase.co";
+const LEADS_SUPABASE_KEY = "sb_publishable_OBalRC9IUE5lsI3qjc3_lA_WJjn7bGA";
 const LEADS_TABELA = "leads";
 
 function initLeadModal() {
