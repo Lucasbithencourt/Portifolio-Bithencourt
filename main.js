@@ -313,23 +313,6 @@ function initPortfolioReveal() {
     });
   }
 
-  const provasItems = gsap.utils.toArray("#provas [data-reveal]");
-  if (provasItems.length) {
-    gsap.set(provasItems, { autoAlpha: 0, y: 50 });
-    gsap.to(provasItems, {
-      autoAlpha: 1,
-      y: 0,
-      ease: "power3.out",
-      duration: 0.9,
-      stagger: 0.08,
-      scrollTrigger: {
-        trigger: "#provas",
-        start: "top 75%",
-        toggleActions: "play none none reverse",
-      },
-    });
-  }
-
   const aboutItems = gsap.utils.toArray("#about [data-reveal]");
   if (aboutItems.length) {
     gsap.set(aboutItems, { autoAlpha: 0, y: 50 });
@@ -1333,90 +1316,177 @@ if (heroCanvas) {
 }
 
 /* =========================================================================
-   CARROSSEL DE PROVAS — um print do gerenciador por slide. Seletores
-   escopados em .provas-swiper pra não brigar com o carrossel de cases.
-   Blindado: só roda se a seção e a lib Swiper existirem.
+   FORMULÁRIO DE CASES — o botão "Ver cases" abre um modal com nome,
+   WhatsApp e e-mail. O envio grava a linha no Supabase e troca o painel
+   pela confirmação. Blindado: só roda se o modal existir na página.
+
+   As credenciais abaixo são públicas por natureza (a chave anon fica
+   visível no navegador de qualquer visitante). Quem protege a tabela é a
+   política de RLS no Supabase: anon PODE inserir e NÃO pode ler. Sem essa
+   política, qualquer um leria a lista de leads.
    ========================================================================= */
-function initProvasSwiper() {
-  const el = document.querySelector(".provas-swiper");
-  if (!el) return;
-  if (typeof Swiper === "undefined") return;
+const LEADS_SUPABASE_URL = "";      // ex.: https://xxxx.supabase.co
+const LEADS_SUPABASE_KEY = "";      // chave anon (publishable)
+const LEADS_TABELA = "leads";
 
-  new Swiper(".provas-swiper", {
-    slidesPerView: 1,
-    spaceBetween: 24,
-    autoHeight: true, // cada prova tem um texto de tamanho diferente
-    grabCursor: true,
-    pagination: { el: ".provas-swiper .swiper-pagination", clickable: true },
-    navigation: {
-      nextEl: ".provas-swiper .swiper-button-next",
-      prevEl: ".provas-swiper .swiper-button-prev",
-    },
-    keyboard: { enabled: true },
-    a11y: { enabled: true },
-  });
-}
+function initLeadModal() {
+  const modal = document.getElementById("lead-modal");
+  const form = document.getElementById("lead-form");
+  const stepForm = document.getElementById("lead-step-form");
+  const stepDone = document.getElementById("lead-step-done");
+  const falha = document.getElementById("lead-form-fail");
+  const closeBtn = modal && modal.querySelector(".lead-modal__close");
+  const triggers = document.querySelectorAll("[data-open-lead]");
+  if (!modal || !form || !stepForm || !stepDone || !closeBtn) return;
 
-/* =========================================================================
-   LIGHTBOX DAS PROVAS — o print é largo demais pra ser lido dentro do card,
-   então clicar abre ele em tamanho cheio. Fecha no Esc, no X ou clicando no
-   fundo. Devolve o foco pro botão de origem ao fechar.
-   ========================================================================= */
-function initProvaLightbox() {
-  const box = document.getElementById("prova-lightbox");
-  const img = document.getElementById("prova-lightbox-img");
-  const closeBtn = box && box.querySelector(".prova-lightbox__close");
-  const triggers = document.querySelectorAll("[data-prova-shot]");
-  if (!box || !img || !closeBtn || !triggers.length) return;
-
+  const submitBtn = form.querySelector(".lead-form__submit");
   let lastTrigger = null;
 
   function open(trigger) {
-    const shot = trigger.getAttribute("data-prova-shot");
-    const inner = trigger.querySelector("img");
-    if (!shot) return;
-
-    lastTrigger = trigger;
-    img.src = shot;
-    img.alt = inner ? inner.alt : "";
-    box.classList.add("is-open");
-    box.setAttribute("aria-hidden", "false");
+    lastTrigger = trigger || null;
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
-    lenis.stop(); // trava o scroll suave da página por baixo
-    closeBtn.focus();
+    lenis.stop();
+    const primeiro = form.querySelector("#lead-nome");
+    if (primeiro && !stepForm.hidden) primeiro.focus();
+    else closeBtn.focus();
   }
 
   function close() {
-    box.classList.remove("is-open");
-    box.setAttribute("aria-hidden", "true");
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
     lenis.start();
     if (lastTrigger) lastTrigger.focus();
     lastTrigger = null;
   }
 
-  triggers.forEach((trigger) => {
-    trigger.addEventListener("click", () => open(trigger));
-  });
-
+  triggers.forEach((t) => t.addEventListener("click", () => open(t)));
   closeBtn.addEventListener("click", close);
 
-  // Clique no fundo (fora da imagem) fecha.
-  box.addEventListener("click", (e) => {
-    if (e.target === box || e.target.classList.contains("prova-lightbox__stage")) {
-      close();
-    }
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) close();
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && box.classList.contains("is-open")) close();
+    if (e.key === "Escape" && modal.classList.contains("is-open")) close();
+  });
+
+  /* --- Validação --- */
+  function erro(campo, msg) {
+    const alvo = form.querySelector('[data-error-for="' + campo.id + '"]');
+    if (alvo) {
+      alvo.textContent = msg || "";
+      alvo.classList.toggle("is-visible", Boolean(msg));
+    }
+    campo.classList.toggle("is-invalid", Boolean(msg));
+    return !msg;
+  }
+
+  function valida() {
+    const nome = form.querySelector("#lead-nome");
+    const whatsapp = form.querySelector("#lead-whatsapp");
+    const email = form.querySelector("#lead-email");
+
+    const okNome = erro(
+      nome,
+      nome.value.trim().length < 2 ? "Escreva seu nome." : ""
+    );
+
+    // Aceita qualquer formatação; o que importa é ter DDD + número.
+    const digitos = whatsapp.value.replace(/\D/g, "");
+    const okZap = erro(
+      whatsapp,
+      digitos.length < 10 || digitos.length > 13
+        ? "Informe o WhatsApp com DDD."
+        : ""
+    );
+
+    const okMail = erro(
+      email,
+      /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())
+        ? ""
+        : "E-mail inválido."
+    );
+
+    return okNome && okZap && okMail;
+  }
+
+  // Limpa o erro assim que a pessoa corrige o campo.
+  form.querySelectorAll("input").forEach((input) => {
+    input.addEventListener("input", () => {
+      if (input.classList.contains("is-invalid")) erro(input, "");
+    });
+  });
+
+  /* --- Envio --- */
+  async function grava(dados) {
+    if (!LEADS_SUPABASE_URL || !LEADS_SUPABASE_KEY) {
+      throw new Error("Supabase ainda não configurado.");
+    }
+
+    const resp = await fetch(
+      LEADS_SUPABASE_URL + "/rest/v1/" + LEADS_TABELA,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: LEADS_SUPABASE_KEY,
+          Authorization: "Bearer " + LEADS_SUPABASE_KEY,
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify(dados),
+      }
+    );
+
+    if (!resp.ok) {
+      throw new Error("Supabase respondeu " + resp.status);
+    }
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    falha.hidden = true;
+
+    // Robô preencheu o campo escondido: finge que deu certo e não grava.
+    const trap = form.querySelector("#lead-empresa");
+    if (trap && trap.value) {
+      stepForm.hidden = true;
+      stepDone.hidden = false;
+      return;
+    }
+
+    if (!valida()) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Enviando...";
+
+    try {
+      await grava({
+        nome: form.querySelector("#lead-nome").value.trim(),
+        whatsapp: form.querySelector("#lead-whatsapp").value.trim(),
+        email: form.querySelector("#lead-email").value.trim(),
+        origem: "botao-ver-cases",
+      });
+
+      stepForm.hidden = true;
+      stepDone.hidden = false;
+      closeBtn.focus();
+      form.reset();
+    } catch (err) {
+      falha.hidden = false;
+      console.error("[lead]", err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Enviar";
+    }
   });
 }
 
 initPortfolioReveal();
 initCasesSwiper();
-initProvasSwiper();
-initProvaLightbox();
+initLeadModal();
 initCaseModal();
 initHeroIcons();
 initHeroTitleRotate();

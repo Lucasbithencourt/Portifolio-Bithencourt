@@ -710,320 +710,292 @@ button:focus-visible,
 }
 
 /* =========================================================================
-   PROVAS — carrossel de prints do gerenciador da Meta. Mesmo card de vidro
-   do resto do site. O print é largo (1765x299): no desktop ocupa a largura
-   do card; no mobile rola na horizontal para continuar legível. Clicar abre
-   o lightbox em tamanho cheio.
+   CTA "VER CASES" — fecha a seção de tráfego pago. Os resultados não ficam
+   abertos na página: o botão abre o formulário de contato.
    ========================================================================= */
-.provas {
-  position: relative;
-  z-index: 2;
-  padding: clamp(4rem, 12vh, 12rem) clamp(1.5rem, 6vw, 6rem);
-  border-top: 1px solid var(--color-accent-soft);
-}
-
-.provas__inner {
-  max-width: 90rem;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.provas__eyebrow {
-  font-size: 0.75rem;
-  letter-spacing: 0.45em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  margin-bottom: 1.5rem;
-}
-
-.provas__headline {
-  font-size: clamp(1.9rem, 6vw, 4rem);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  color: var(--color-fg);
-  max-width: 22ch;
-  margin-bottom: 1.25rem;
-}
-
-.provas__lead {
-  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
-  line-height: 1.7;
-  color: var(--color-muted);
-  max-width: 52ch;
-  margin-bottom: clamp(2.5rem, 6vw, 4rem);
-}
-
-/* O carrossel precisa de padding lateral para as setas não cobrirem o card. */
-.provas-swiper {
-  padding-bottom: 3.5rem;
-}
-
-/* --- Card da prova --- */
-.prova {
-  height: auto; /* Swiper força stretch; aqui o card acompanha o conteúdo. */
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-card);
-  padding: clamp(1.5rem, 3vw, 2.5rem);
-  box-sizing: border-box;
-}
-
-.prova__head {
+.trafego__cta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-}
-
-.prova__index {
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: var(--color-accent);
-}
-
-/* Selo da plataforma (Meta Ads / Google Ads) — accent, para diferenciar
-   da tag de nicho. */
-.prova__plat {
-  padding: 5px 12px;
-  border-radius: var(--radius-pill);
-  background: rgba(31, 122, 78, 0.12);
-  border: 1px solid rgba(31, 122, 78, 0.35);
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  color: var(--color-accent);
-  white-space: nowrap;
-}
-
-.prova__tag {
-  padding: 5px 12px;
-  border-radius: var(--radius-pill);
+  justify-content: space-between;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  font-size: 0.75rem;
-  color: var(--color-fg);
+  border-radius: var(--radius-card);
 }
 
-.prova__period {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
+.trafego__cta-text {
+  flex: 1 1 26ch;
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  line-height: 1.6;
   color: var(--color-muted);
-  margin-left: auto;
+  max-width: 52ch;
 }
 
-.prova__title {
-  font-size: clamp(1.1rem, 2vw, 1.6rem);
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: var(--color-fg);
-  max-width: 34ch;
-  margin-bottom: 1.5rem;
+.trafego__cta-btn {
+  flex: 0 0 auto;
+  padding: 14px 32px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
 
-/* Números-chave — lidos antes do print, porque o print é a evidência. */
-.prova__metrics {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: clamp(0.75rem, 2vw, 1.5rem);
-  padding: 0;
-  margin: 0 0 clamp(1.5rem, 3vw, 2rem);
-}
-
-.prova__metric {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.prova__metric-value {
-  font-size: clamp(1.4rem, 3vw, 2.1rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  color: var(--color-fg);
-  font-variant-numeric: tabular-nums;
-}
-
-.prova__metric-label {
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--color-muted);
-}
-
-/* Uma prova pode ter mais de um print (ex.: aba de resultados + aba de
-   alcance/CTR). Empilhados com respiro entre eles. */
-.prova__shots {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-/* O print. É um <button> para ser acessível por teclado. */
-.prova__shot {
-  display: block;
-  width: 100%;
-  padding: 0;
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  cursor: zoom-in;
-  transition: border-color 0.25s ease, transform 0.25s ease;
-}
-
-.prova__shot:hover,
-.prova__shot:focus-visible {
-  border-color: rgba(255, 255, 255, 0.28);
+.trafego__cta-btn:hover,
+.trafego__cta-btn:focus-visible {
   transform: translateY(-2px);
+  filter: brightness(1.15);
 }
 
-.prova__shot img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.prova__text {
-  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
-  line-height: 1.7;
-  color: var(--color-muted);
-  max-width: 68ch;
-  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
-}
-
-/* Números citados no meio do texto ganham peso, sem virar outra cor. */
-.prova__text strong {
-  color: var(--color-fg);
-  font-weight: 600;
-}
-
-/* Frase de fechamento da seção — fecha o argumento das provas. */
-.provas__quote {
-  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
-  padding-top: clamp(2rem, 4vw, 3rem);
-  border-top: 1px solid var(--card-border);
-  max-width: 60ch;
-}
-
-.provas__quote p {
-  font-size: clamp(1.05rem, 2vw, 1.4rem);
-  line-height: 1.55;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--color-fg);
-  margin-bottom: 1rem;
-}
-
-.provas__quote cite {
-  font-style: normal;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-
-/* No mobile o print encolheria a ponto de não dar para ler. Então ele
-   mantém uma largura mínima e o container rola na horizontal. */
-@media (max-width: 900px) {
-  .prova__metrics {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .prova__shot {
-    overflow-x: auto;
-    cursor: pointer;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .prova__shot img {
-    width: auto;
-    min-width: 760px;
-    max-width: none;
-  }
-
-  /* Painel do Google Ads é alto, não uma tira larga: cabe na tela. */
-  .prova__shot--tall {
-    overflow-x: visible;
-  }
-
-  .prova__shot--tall img {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .prova__period {
-    margin-left: 0;
-    width: 100%;
-  }
-}
-
-/* --- Lightbox --- */
-.prova-lightbox {
+/* =========================================================================
+   MODAL DO FORMULÁRIO — duas etapas no mesmo painel: formulário e
+   confirmação. Mesmo card de vidro do resto do site.
+   ========================================================================= */
+.lead-modal {
   position: fixed;
   inset: 0;
-  z-index: 120;
+  z-index: 130;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: clamp(1rem, 4vw, 3rem);
-  background: rgba(5, 5, 7, 0.92);
+  background: rgba(5, 5, 7, 0.9);
   backdrop-filter: blur(6px);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.prova-lightbox.is-open {
+.lead-modal.is-open {
   opacity: 1;
   visibility: visible;
 }
 
-/* Print largo: o palco rola na horizontal em vez de espremer a imagem. */
-.prova-lightbox__stage {
-  max-width: 100%;
+.lead-modal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 30rem;
   max-height: 100%;
-  overflow: auto;
-  border-radius: 12px;
+  overflow-y: auto;
+  padding: clamp(1.75rem, 4vw, 2.75rem);
+  background: #101014;
   border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  transform: translateY(12px);
+  transition: transform 0.3s ease;
 }
 
-.prova-lightbox__img {
-  display: block;
-  max-width: none;
-  height: auto;
+.lead-modal.is-open .lead-modal__panel {
+  transform: translateY(0);
 }
 
-.prova-lightbox__close {
+.lead-modal__close {
   position: absolute;
-  top: clamp(0.75rem, 2vw, 1.5rem);
-  right: clamp(0.75rem, 2vw, 1.5rem);
-  width: 44px;
-  height: 44px;
+  top: 0.9rem;
+  right: 0.9rem;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 1px solid var(--card-border);
   background: var(--card-bg);
   color: var(--color-fg);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   line-height: 1;
   cursor: pointer;
   transition: border-color 0.25s ease, background 0.25s ease;
 }
 
-.prova-lightbox__close:hover,
-.prova-lightbox__close:focus-visible {
+.lead-modal__close:hover,
+.lead-modal__close:focus-visible {
   border-color: rgba(255, 255, 255, 0.28);
   background: rgba(255, 255, 255, 0.1);
 }
 
+.lead-modal__eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1rem;
+}
+
+.lead-modal__title {
+  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+  margin-bottom: 0.75rem;
+}
+
+.lead-modal__lead {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--color-muted);
+  margin-bottom: 1.75rem;
+}
+
+/* --- Campos --- */
+.lead-form__field {
+  margin-bottom: 1.1rem;
+}
+
+.lead-form__field label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-muted);
+  margin-bottom: 0.5rem;
+}
+
+.lead-form__field input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-fg);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.lead-form__field input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.lead-form__field input.is-invalid {
+  border-color: #d4564f;
+}
+
+.lead-form__error {
+  display: none;
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: #e08a85;
+}
+
+.lead-form__error.is-visible {
+  display: block;
+}
+
+/* Armadilha de spam — fora da tela, mas ainda preenchível por robô. */
+.lead-form__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.lead-form__submit {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 14px 24px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
+.lead-form__submit:hover:not(:disabled),
+.lead-form__submit:focus-visible:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+.lead-form__submit:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.lead-form__note {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.lead-form__fail {
+  margin-top: 1rem;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 86, 79, 0.4);
+  background: rgba(212, 86, 79, 0.1);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #e08a85;
+}
+
+.lead-form__fail a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* --- Confirmação --- */
+.lead-done__check {
+  width: 52px;
+  height: 52px;
+  margin-bottom: 1.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--color-accent);
+  background: rgba(31, 122, 78, 0.12);
+  border: 1px solid rgba(31, 122, 78, 0.35);
+}
+
+.lead-done__wpp {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--color-fg);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.lead-done__wpp:hover,
+.lead-done__wpp:focus-visible {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 640px) {
+  .trafego__cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .trafego__cta-btn {
+    width: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .prova__shot,
-  .prova-lightbox {
+  .lead-modal,
+  .lead-modal__panel,
+  .trafego__cta-btn {
     transition: none;
   }
 }
