@@ -784,12 +784,19 @@ button:focus-visible,
   max-width: 30rem;
   max-height: 100%;
   overflow-y: auto;
-  padding: clamp(1.75rem, 4vw, 2.75rem);
+  /* Rolagem continua funcionando em tela baixa, mas sem a barra à mostra. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: clamp(1.75rem, 4vw, 2.5rem);
   background: #101014;
   border: 1px solid var(--card-border);
   border-radius: var(--radius-card);
   transform: translateY(12px);
   transition: transform 0.3s ease;
+}
+
+.lead-modal__panel::-webkit-scrollbar {
+  display: none;
 }
 
 .lead-modal.is-open .lead-modal__panel {
@@ -823,28 +830,28 @@ button:focus-visible,
   letter-spacing: 0.35em;
   text-transform: uppercase;
   color: var(--color-accent);
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
 
 .lead-modal__title {
-  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+  font-size: clamp(1.2rem, 2.3vw, 1.5rem);
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.01em;
   color: var(--color-fg);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.65rem;
 }
 
 .lead-modal__lead {
   font-size: 0.92rem;
-  line-height: 1.65;
+  line-height: 1.6;
   color: var(--color-muted);
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.4rem;
 }
 
 /* --- Campos --- */
 .lead-form__field {
-  margin-bottom: 1.1rem;
+  margin-bottom: 0.9rem;
 }
 
 .lead-form__field label {
