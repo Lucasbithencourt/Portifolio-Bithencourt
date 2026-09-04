@@ -296,6 +296,23 @@ function initPortfolioReveal() {
     });
   }
 
+  const metodoItems = gsap.utils.toArray("#metodo [data-reveal]");
+  if (metodoItems.length) {
+    gsap.set(metodoItems, { autoAlpha: 0, y: 50 });
+    gsap.to(metodoItems, {
+      autoAlpha: 1,
+      y: 0,
+      ease: "power3.out",
+      duration: 0.9,
+      stagger: 0.08,
+      scrollTrigger: {
+        trigger: "#metodo",
+        start: "top 75%",
+        toggleActions: "play none none reverse",
+      },
+    });
+  }
+
   const trafegoItems = gsap.utils.toArray("#trafego [data-reveal]");
   if (trafegoItems.length) {
     gsap.set(trafegoItems, { autoAlpha: 0, y: 50 });
@@ -682,35 +699,202 @@ function initBinaryTrail() {
 }
 
 /* =========================================================================
-   CARROSSEL DE CASES — efeito coverflow (slide central maior/em foco, os
-   laterais menores e recuados). Blindado: só roda se .cases-swiper existir
-   e a lib Swiper tiver carregado. Swipe/drag, setas, teclado, paginação e
-   a11y vêm do próprio Swiper.
-   ========================================================================= */
-function initCasesSwiper() {
-  const el = document.querySelector(".cases-swiper");
-  if (!el) return;
-  if (typeof Swiper === "undefined") return;
+   CARROSSEL DE CASES — MARQUEE INFINITO
+   Fluxo contínuo de verdade: a lista de cards é DUPLICADA e a trilha anda
+   até exatamente metade do seu comprimento. Nesse ponto a cópia ocupa a
+   posição do original, então o timeline reinicia sem que exista emenda
+   visível — é isso que faz o carrossel parecer infinito (e não "voltar ao
+   começo"). ease:"none" = velocidade constante, sem acelerar/frear.
+   Passar o mouse desacelera até parar (timeScale animado, não corte seco).
 
-  new Swiper(".cases-swiper", {
-    effect: "coverflow",
-    grabCursor: true,
-    centeredSlides: true,
-    slidesPerView: "auto",
-    coverflowEffect: {
-      rotate: 0,
-      stretch: 0,
-      depth: 150,
-      modifier: 1.5,
-      slideShadows: false,
-    },
-    pagination: { el: ".swiper-pagination", clickable: true },
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
-    keyboard: { enabled: true },
-    a11y: { enabled: true },
+   Por que não Swiper aqui: Swiper pensa em "slides discretos" e reposiciona
+   os clones por conta própria; empurrar a trilha por fora briga com esse
+   controle interno e o resultado sai errático. O marquee é dono do próprio
+   movimento — mais simples e previsível.
+   ========================================================================= */
+function initCasesMarquee() {
+  const wrap = document.querySelector(".cases-marquee");
+  if (!wrap) return;
+  const track = wrap.querySelector(".cases-track");
+  if (!track) return;
+
+  // Duplica os cards UMA vez. Os clones são decorativos: escondidos de
+  // leitores de tela e fora da navegação por teclado (o conteúdo real já
+  // está nos originais), mas continuam clicáveis para abrir o modal.
+  const originais = Array.from(track.children);
+  originais.forEach((node) => {
+    const clone = node.cloneNode(true);
+    clone.setAttribute("aria-hidden", "true");
+    clone.dataset.clone = "1";
+    track.appendChild(clone);
+  });
+
+  const SPEED = 42;            // px por segundo: leitura tranquila
+  let tl = null;
+
+  function build() {
+    if (tl) tl.kill();
+    gsap.set(track, { x: 0 });
+    // Distância de UMA volta = onde começa o primeiro CLONE. Usar
+    // scrollWidth/2 erraria por meio "gap" (o vão entre o último clone e o
+    // primeiro original não existe na medida), e esse resto viraria um
+    // tranco a cada volta. offsetLeft do clone já embute o gap certo.
+    const volta = track.children[originais.length].offsetLeft;
+    if (!volta) return;
+    tl = gsap.to(track, {
+      x: -volta,
+      duration: volta / SPEED,
+      ease: "none",
+      repeat: -1,
+    });
+    if (prefersReducedMotion) tl.pause();
+  }
+
+  build();
+
+  // Larguras mudam com a viewport (os cards são responsivos): remonta o
+  // loop com a nova medida, senão a emenda sai do lugar.
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(build, 250);
+  });
+
+  // Pausa no hover: timeScale animado (freia e volta suave, sem corte seco).
+  // focusin/focusout cobrem quem navega por teclado.
+  const freia = () => tl && gsap.to(tl, { timeScale: 0, duration: 0.45, overwrite: true });
+  const anda = () => {
+    if (tl && !prefersReducedMotion) gsap.to(tl, { timeScale: 1, duration: 0.6, overwrite: true });
+  };
+  wrap.addEventListener("mouseenter", freia);
+  wrap.addEventListener("mouseleave", anda);
+  wrap.addEventListener("focusin", freia);
+  wrap.addEventListener("focusout", anda);
+}
+
+/* =========================================================================
+   WAVE + LETREIRO
+   As curvas são desenhadas em JS na LARGURA REAL da tela (viewBox: 1 unidade
+   = 1 pixel). Assim a espessura da fita, a amplitude da onda e o tamanho da
+   letra ficam constantes em qualquer monitor — com o SVG escalando por
+   proporção, a fita engordava em telas largas e afinava nas estreitas.
+
+   O texto corre pela curva via <textPath>: o trilho é a MESMA onda, no meio
+   da fita. O loop é invisível porque a frase é repetida e o deslocamento
+   percorre exatamente uma repetição.
+
+   Destaques focados em SAÚDE — a especialidade dos cases do site.
+   ========================================================================= */
+const WAVE_FRASES = [
+  "Gestão de tráfego",
+  "Estratégia",
+  "Foco em área médica",
+  "Sites que convertem",
+];
+
+// medidas em PIXELS (constantes em qualquer tela)
+const WAVE = {
+  amp: 20,          // altura da ondulação
+  thick: 52,        // espessura da fita
+  halfWave: 470,    // comprimento de meia onda (define quantas curvas cabem)
+  top: 12,          // respiro acima da crista
+  speed: 58,        // px/s do letreiro
+};
+
+function initWave() {
+  const svg = document.getElementById("wave-svg");
+  if (!svg) return;
+  const band = document.getElementById("wave-band");
+  const pTop = document.getElementById("waveTop");
+  const pBottom = document.getElementById("waveBottom");
+  const pRail = document.getElementById("waveTextRail");
+  const tp = document.getElementById("wave-textpath");
+  if (!band || !pTop || !pRail || !tp) return;
+
+  let tween = null;
+
+  function desenhar() {
+    const w = Math.ceil(svg.getBoundingClientRect().width) || window.innerWidth;
+    const { amp, thick, halfWave, top } = WAVE;
+
+    // nº de meias-ondas: par, pra fita começar e terminar na mesma altura
+    let n = Math.max(2, Math.round(w / halfWave));
+    if (n % 2) n += 1;
+    const h = w / n;
+    const cy = top + amp;                    // eixo da onda
+
+    // altura de cada nó, alternando crista/vale
+    const y = [];
+    for (let i = 0; i <= n; i++) y.push(cy + (i % 2 === 0 ? -amp : amp));
+
+    // curva suave (uma S-curve de bézier por meia onda)
+    const curva = (off, ida = true) => {
+      let d = "";
+      if (ida) {
+        d = `M0,${y[0] + off}`;
+        for (let i = 0; i < n; i++) {
+          const x0 = i * h, x1 = x0 + h, m = x0 + h / 2;
+          d += ` C${m},${y[i] + off} ${m},${y[i + 1] + off} ${x1},${y[i + 1] + off}`;
+        }
+      } else {
+        // mesma curva ao contrário (fecha o corpo da fita)
+        for (let i = n; i > 0; i--) {
+          const x0 = i * h, x1 = x0 - h, m = x0 - h / 2;
+          d += ` C${m},${y[i] + off} ${m},${y[i - 1] + off} ${x1},${y[i - 1] + off}`;
+        }
+      }
+      return d;
+    };
+
+    const dTop = curva(0);
+    pTop.setAttribute("d", dTop);
+    pBottom.setAttribute("d", curva(thick));
+    // trilho do texto: no meio da fita (+ meia altura de letra p/ a baseline)
+    pRail.setAttribute("d", curva(thick * 0.62));
+    band.setAttribute("d", `${dTop} L${w},${y[n] + thick}${curva(thick, false)} Z`);
+
+    const alturaTotal = cy + amp + thick + 10;
+    svg.setAttribute("viewBox", `0 0 ${w} ${alturaTotal}`);
+    svg.style.height = alturaTotal + "px";
+
+    montarLetreiro();
+  }
+
+  function montarLetreiro() {
+    const SEP = "   •   ";
+    const umaFrase = WAVE_FRASES.join(SEP) + SEP;
+    const curva = pRail.getTotalLength();
+
+    tp.textContent = umaFrase;
+    const umaVolta = tp.getComputedTextLength();
+    if (!umaVolta) return;
+
+    // repete até cobrir a curva MAIS uma volta (a sobra é o que evita
+    // aparecer vazio no instante do reinício)
+    tp.textContent = umaFrase.repeat(Math.ceil(curva / umaVolta) + 2);
+
+    if (tween) tween.kill();
+    if (prefersReducedMotion) return;
+
+    // de 0 até -umaVolta: o texto desliza pra esquerda e, ao completar uma
+    // repetição, o quadro é idêntico ao inicial (emenda invisível)
+    tween = gsap.fromTo(
+      tp,
+      { attr: { startOffset: 0 } },
+      {
+        attr: { startOffset: -umaVolta },
+        duration: umaVolta / WAVE.speed,
+        ease: "none",
+        repeat: -1,
+      }
+    );
+  }
+
+  desenhar();
+  let t = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(t);
+    t = setTimeout(desenhar, 200);
   });
 }
 
@@ -725,18 +909,20 @@ const CASES = {
     title: "UP! Especialidades Pediátricas",
     meta: {
       Cliente: "UP! Especialidades Pediátricas",
-      Papel: "Design & Desenvolvimento + Tráfego Pago",
+      Papel: "Site do zero + gestão de tráfego pago",
       Ano: "2025",
       Stack: "HTML · CSS · JavaScript",
     },
     text:
-      "A clínica já tinha uma identidade física lúdica — personagens de " +
+      "A clínica já tinha uma identidade física lúdica: personagens de " +
       "bichinhos pintados nas paredes do consultório. O desafio foi estender " +
       "essa mesma imersão pro digital: desenvolvi o site do zero, design e " +
       "código, reaproveitando os próprios personagens da clínica (leão, " +
       "elefante, macaco, zebra, galinha) na experiência online, pra que pais " +
       "e crianças reconhecessem o site como extensão natural do espaço " +
-      "físico. Hoje também acompanho o tráfego pago do cliente.",
+      "físico. Hoje sigo com a clínica no dia a dia: rodo as campanhas, " +
+      "escrevo os roteiros dos criativos e acompanho o que acontece com " +
+      "cada contato até o agendamento.",
     live: "https://uppediatria.com.br",
     media: "media/up-hero.jpg",
     alt: "Captura de tela do site UP! Especialidades Pediátricas",
@@ -746,16 +932,18 @@ const CASES = {
     title: "Rizzatti Dermatologia e Saúde",
     meta: {
       Cliente: "Rizzatti Dermatologia e Saúde",
-      Papel: "Design & Desenvolvimento + Tráfego Pago",
+      Papel: "Site do zero + gestão de tráfego pago",
       Ano: "2025",
       Stack: "HTML · CSS · JavaScript",
     },
     text:
-      "Site construído do zero — design e código — pra apresentar as cinco " +
+      "Site construído do zero (design e código) pra apresentar as cinco " +
       "frentes de atendimento da clínica (dermatologia clínica, cirúrgica, " +
       "estética facial, estética corporal e tricologia) e os dois " +
       "especialistas responsáveis, com foco em conversão direta via WhatsApp. " +
-      "Acompanho o tráfego pago do cliente.",
+      "Com esse leque, boa parte do trabalho de tráfego " +
+      "é separar de qual delas veio cada lead, porque o que funciona para " +
+      "estética não é o que traz paciente de tricologia.",
     live: "https://clinicarizzatti.com.br",
     media: "media/rizzatti-hero.jpg",
     alt: "Captura de tela do site Rizzatti Dermatologia e Saúde",
@@ -765,16 +953,18 @@ const CASES = {
     title: "SULCARDIO Clínica Cardiológica",
     meta: {
       Cliente: "SULCARDIO Clínica Cardiológica",
-      Papel: "Design & Desenvolvimento + Tráfego Pago",
+      Papel: "Site do zero + gestão de tráfego pago",
       Ano: "2025",
       Stack: "HTML · CSS · JavaScript",
     },
     text:
       "Site institucional construído do zero pra uma clínica de cardiologia " +
       "consolidada desde 2010. O objetivo era comunicar autoridade através de " +
-      "números reais — mais de 10 mil pacientes atendidos, 15 anos de " +
-      "experiência, 50 mil exames realizados — e facilitar o agendamento de " +
-      "consultas e exames. Acompanho o tráfego pago do cliente.",
+      "números reais: mais de 10 mil pacientes atendidos, 15 anos de " +
+      "experiência, 50 mil exames realizados, e facilitar o agendamento de " +
+      "consultas e exames. No tráfego, a leitura diária é o que mostra " +
+      "quando o contato veio de fora da região atendida, um motivo comum " +
+      "de lead que não vira consulta em clínica com estrutura de exames.",
     live: "https://sulcardio.com.br",
     media: "media/sulcardio-hero.jpg",
     alt: "Captura de tela do site SULCARDIO Clínica Cardiológica",
@@ -792,7 +982,7 @@ const CASES = {
       "Projeto diferente dos outros três: o cliente chegou com o site já bem " +
       "desenvolvido e participou ativamente de cada etapa, dando direção e " +
       "feedback constante. Em vez de criação do zero, o trabalho aqui foi de " +
-      "personalização e refinamento — mantendo a comunicação clara da " +
+      "personalização e refinamento, mantendo a comunicação clara da " +
       "proposta da clínica (investigação da causa raiz dos sintomas) e a " +
       "jornada de agendamento por unidade (Criciúma, Araranguá e Garopaba).",
     live: "https://ostermannmedicalcenter.com.br",
@@ -852,7 +1042,7 @@ function initCaseModal() {
       "allow-scripts allow-same-origin allow-forms" // nunca allow-top-navigation
     );
     frame.setAttribute("loading", "lazy");
-    frame.setAttribute("title", "Site ao vivo — " + data.title);
+    frame.setAttribute("title", "Site ao vivo: " + data.title);
     frame.style.opacity = "0";
     liveFrame = frame;
 
@@ -873,7 +1063,7 @@ function initCaseModal() {
       }
       const badge = document.createElement("span");
       badge.className = "case-modal__live-badge";
-      badge.textContent = "🔴 ao vivo — role e explore";
+      badge.textContent = "🔴 ao vivo, role e explore";
       media.appendChild(badge);
 
       // O iframe entra por cima do screenshot (que continua por baixo como
@@ -1220,6 +1410,8 @@ function initTrafegoStats() {
     });
   }
 
+  // Contador "ao vivo" REMOVIDO: sorteava um número entre 40 e 50 e o exibia
+  // como se fosse dado real. Métrica inventada não sustenta credibilidade.
   const live = document.getElementById("stat-campanhas");
   const LIVE_MIN = 40;
   const LIVE_MAX = 50;
@@ -1316,7 +1508,8 @@ if (heroCanvas) {
 }
 
 initPortfolioReveal();
-initCasesSwiper();
+initCasesMarquee();
+initWave();
 initCaseModal();
 initHeroIcons();
 initHeroTitleRotate();

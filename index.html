@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lucas Bithencourt — Design &amp; Desenvolvimento Web</title>
+    <title>Lucas Bithencourt | Tráfego pago e sites, com especialidade em saúde</title>
     <meta
       name="description"
-      content="Portfólio de Lucas Bithencourt Florencio — design e desenvolvimento de sites que convertem."
+      content="Gestão de tráfego pago e desenvolvimento de sites. Trabalho principalmente com clínicas e consultórios, e acompanho o caminho do anúncio até o agendamento."
     />
 
     <!-- Favicon -->
@@ -19,22 +19,17 @@
     <!-- Open Graph / Twitter. TODO: trocar seudominio.com pelo domínio real. -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://seudominio.com/" />
-    <meta property="og:title" content="Lucas Bithencourt — Design & Desenvolvimento Web" />
+    <meta property="og:title" content="Lucas Bithencourt | Tráfego pago e sites, com especialidade em saúde" />
     <meta
       property="og:description"
-      content="Portfólio de Lucas Bithencourt Florencio — design e desenvolvimento de sites que convertem."
+      content="Gestão de tráfego pago, sites e acompanhamento de leads. Trabalho principalmente com clínicas e consultórios, e acompanho o caminho do anúncio até o agendamento."
     />
     <!-- TODO: trocar por uma imagem OG dedicada 1200x630 quando tiver. -->
     <meta property="og:image" content="https://seudominio.com/frames/0221.webp" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Swiper (carrossel de cases) — versão fixada na própria URL do CDN. -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/14.0.5/swiper-bundle.min.css"
-    />
 
-    <link rel="stylesheet" href="style.css?v=27" />
+    <link rel="stylesheet" href="style.css?v=36" />
   </head>
 
   <body>
@@ -46,6 +41,7 @@
       <div class="site-nav__inner">
         <div class="site-nav__links">
           <a href="index.html#works">Cases</a>
+          <a href="index.html#metodo">Método</a>
           <a href="index.html#trafego">Tráfego Pago</a>
           <a href="index.html#about">Sobre</a>
           <a href="index.html#contact">Contato</a>
@@ -107,14 +103,14 @@
       </div>
 
       <div class="hero__content">
-        <p class="hero__badge">Design, desenvolvimento e tráfego pago</p>
+        <p class="hero__badge">Tráfego pago e sites para clínicas</p>
         <h1 class="hero__title">
-          Sites que convertem.<br />
-          Tráfego pago que <span class="hero__title-rotate" data-words="escala,vende,performa,conecta,funciona,multiplica,entrega,atrai">escala.</span>
+          O anúncio é o começo.<br />
+          Eu acompanho até o <span class="hero__title-rotate" data-words="agendamento,retorno,fechamento">agendamento.</span>
         </h1>
         <p class="hero__sub">
-          Lucas Bithencourt Florencio — crio sites e sistemas que vendem e
-          gerencio o tráfego pago que traz o cliente até eles.
+          Entro no negócio, acompanho cada lead e ajusto todo dia.
+          Trabalho principalmente com clínicas e consultórios.
         </p>
         <div class="hero__ctas">
           <a
@@ -124,25 +120,51 @@
             rel="noopener"
             >Falar no WhatsApp</a
           >
-          <a class="hero__cta-secondary" href="#works">Ver Cases</a>
+          <a class="hero__cta-secondary" href="#metodo">Como eu trabalho</a>
         </div>
+      </div>
+
+      <!-- WAVE divisória = LETREIRO.
+           As curvas são GERADAS EM JAVASCRIPT (main.js → initWave) na
+           largura real da tela, com viewBox 1 unidade = 1 pixel. É isso que
+           mantém a espessura da fita e o tamanho da letra IGUAIS em qualquer
+           monitor — antes o SVG escalava junto com a largura e a fita
+           engordava em telas grandes. -->
+      <div class="hero__wave" aria-hidden="true">
+        <svg class="hero__wave-svg" id="wave-svg" role="presentation" preserveAspectRatio="none">
+          <defs>
+            <path id="waveTop" />
+            <path id="waveBottom" />
+            <path id="waveTextRail" />
+          </defs>
+
+          <path class="hero__wave-band" id="wave-band" />
+          <use class="hero__wave-line" href="#waveTop" />
+          <use class="hero__wave-line hero__wave-line--soft" href="#waveBottom" />
+
+          <text class="hero__wave-text">
+            <textPath id="wave-textpath" href="#waveTextRail" startOffset="0"></textPath>
+          </text>
+        </svg>
       </div>
     </section>
 
     <section class="manifesto" id="manifesto">
       <div class="manifesto__inner">
-        <p class="manifesto__eyebrow" data-reveal>MANIFESTO</p>
+        <p class="manifesto__eyebrow" data-reveal>O TRABALHO</p>
 
         <h2 class="manifesto__headline">
-          <span class="manifesto__line" data-reveal>Sites com propósito.</span>
-          <span class="manifesto__line" data-reveal>Estratégia por trás</span>
-          <span class="manifesto__line manifesto__accent" data-reveal>de cada clique.</span>
+          <span class="manifesto__line" data-reveal>A campanha não</span>
+          <span class="manifesto__line" data-reveal>termina no</span>
+          <span class="manifesto__line" data-reveal>formulário</span>
+          <span class="manifesto__line manifesto__accent" data-reveal>preenchido.</span>
         </h2>
 
         <p class="manifesto__sub" data-reveal>
-          Cada site nasce com um objetivo claro — design e tráfego pago
-          trabalhando juntos, não só pra existir. O que construo entrega
-          resultado: rápido, direcionado e mensurável.
+          Entre o lead chegar e o paciente sentar na cadeira existe uma distância:
+          qualificação, tempo de resposta e valor percebido. É nessa distância
+          que eu trabalho junto com quem atende. Em clínica, o gargalo quase
+          nunca está no anúncio.
         </p>
       </div>
     </section>
@@ -153,12 +175,14 @@
         <h2 class="works__title">Cases</h2>
       </header>
 
-      <!-- CARROSSEL DE CASES — efeito coverflow (Swiper). O slide central
-           fica maior/em foco; os laterais menores e recuados. Conteúdo
-           (nome, categoria, ano, screenshot) espelha o das páginas de case. -->
-      <div class="swiper cases-swiper">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide case-slide" data-case="1">
+      <!-- CARROSSEL DE CASES: marquee infinito de verdade. Os cards correm
+           em fluxo contínuo e sem fim; o JS duplica a lista e move a trilha,
+           de modo que a emenda cai exatamente onde a cópia coincide com o
+           original (nunca há "volta ao começo" visível). Passar o mouse
+           desacelera até parar. Clicar num card abre o modal do case. -->
+      <div class="cases-marquee">
+        <div class="cases-track">
+          <div class="case-slide" data-case="1">
             <img
               src="media/up-hero.jpg"
               alt="Captura de tela do site UP! Especialidades Pediátricas"
@@ -170,7 +194,7 @@
               <span class="case-slide__cat">Web / Pediatria · 2025</span>
             </div>
           </div>
-          <div class="swiper-slide case-slide" data-case="2">
+          <div class="case-slide" data-case="2">
             <img
               src="media/rizzatti-hero.jpg"
               alt="Captura de tela do site Rizzatti Dermatologia e Saúde"
@@ -182,7 +206,7 @@
               <span class="case-slide__cat">Web / Dermatologia · 2025</span>
             </div>
           </div>
-          <div class="swiper-slide case-slide" data-case="3">
+          <div class="case-slide" data-case="3">
             <img
               src="media/sulcardio-hero.jpg"
               alt="Captura de tela do site SULCARDIO Clínica Cardiológica"
@@ -194,7 +218,7 @@
               <span class="case-slide__cat">Web / Cardiologia · 2025</span>
             </div>
           </div>
-          <div class="swiper-slide case-slide" data-case="4">
+          <div class="case-slide" data-case="4">
             <img
               src="media/ostermann-hero.jpg"
               alt="Captura de tela do site Ostermann Medical Center"
@@ -207,9 +231,104 @@
             </div>
           </div>
         </div>
-        <div class="swiper-pagination"></div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
+      </div>
+    </section>
+
+    <!-- MÉTODO: o trabalho de acompanhamento, que é o diferencial real e
+         não aparecia em lugar nenhum do site. Reusa .trafego__grid e
+         .trafego__item (mesmo card de vidro), sem CSS novo além do
+         modificador --wide, da planilha e da nota. -->
+    <section class="metodo" id="metodo">
+      <div class="metodo__inner">
+        <p class="metodo__eyebrow" data-reveal>COMO EU TRABALHO</p>
+
+        <h2 class="metodo__headline" data-reveal>
+          O que acontece depois que a campanha sobe.
+        </h2>
+
+        <p class="metodo__lead" data-reveal>
+          Tráfego pago para consultório tem muito de consultoria. Sem entender
+          por que o lead não agendou, eu estaria ajustando campanha no escuro.
+        </p>
+
+        <div class="trafego__grid metodo__grid">
+          <div class="trafego__item" data-reveal>
+            <span class="trafego__item-index">01</span>
+            <h3 class="trafego__item-title">Entro no negócio primeiro</h3>
+            <p class="trafego__item-text">
+              Antes de subir campanha: qual o procedimento, qual o ticket, quem
+              a clínica quer atender e quem ela prefere não atender. Anúncio
+              feito sem isso atrai volume, não paciente.
+            </p>
+          </div>
+
+          <div class="trafego__item" data-reveal>
+            <span class="trafego__item-index">02</span>
+            <h3 class="trafego__item-title">Roteiro escrito para tráfego</h3>
+            <p class="trafego__item-text">
+              Criativo para campanha não é post de feed. Escrevo o roteiro
+              pensando em quem vai ver aquilo sem procurar por você, e no que
+              essa pessoa precisa entender antes de chamar no WhatsApp.
+            </p>
+          </div>
+
+          <div class="trafego__item" data-reveal>
+            <span class="trafego__item-index">03</span>
+            <h3 class="trafego__item-title">Dentro das normas do conselho</h3>
+            <p class="trafego__item-text">
+              Publicidade médica tem regra, e ela é o primeiro receio de quem
+              anuncia. Trabalho dentro do que o CFM permite, e essa conversa
+              acontece antes do anúncio ir para o ar.
+            </p>
+          </div>
+
+          <div class="trafego__item" data-reveal>
+            <span class="trafego__item-index">04</span>
+            <h3 class="trafego__item-title">Apoio a quem atende</h3>
+            <p class="trafego__item-text">
+              Quando o negócio precisa, alinho junto com a secretária e a
+              equipe de vendas. Não é auditoria do atendimento: é ajustar a
+              conversa para o tipo de paciente que a campanha está trazendo.
+            </p>
+          </div>
+        </div>
+
+        <!-- O ARTEFATO: a planilha é a prova mais concreta do método, e o
+             que nenhum concorrente mostra. Mock em HTML/CSS, sem imagem. -->
+        <div class="leads" data-reveal>
+          <div class="leads__head">
+            <span class="leads__title">Acompanhamento de leads</span>
+            <span class="leads__note">exemplo do que a planilha registra</span>
+          </div>
+          <div class="leads__scroll">
+            <table class="leads__table">
+              <thead>
+                <tr><th>Lead</th><th>Origem</th><th>Contato</th><th>O que aconteceu</th></tr>
+              </thead>
+              <tbody>
+                <tr><td data-rot="Lead">#128</td><td data-rot="Origem">Meta Ads</td><td data-rot="Contato">respondido em 6 min</td><td data-rot="O que aconteceu"><span class="leads__pill leads__pill--ok">agendou</span></td></tr>
+                <tr><td data-rot="Lead">#129</td><td data-rot="Origem">Meta Ads</td><td data-rot="Contato">respondido em 4 h</td><td data-rot="O que aconteceu"><span class="leads__pill">parou de responder</span></td></tr>
+                <tr><td data-rot="Lead">#130</td><td data-rot="Origem">Google Ads</td><td data-rot="Contato">respondido em 12 min</td><td data-rot="O que aconteceu"><span class="leads__pill">perguntou preço e sumiu</span></td></tr>
+                <tr><td data-rot="Lead">#131</td><td data-rot="Origem">Meta Ads</td><td data-rot="Contato">respondido em 9 min</td><td data-rot="O que aconteceu"><span class="leads__pill">fora da região</span></td></tr>
+                <tr><td data-rot="Lead">#132</td><td data-rot="Origem">Meta Ads</td><td data-rot="Contato">respondido em 3 min</td><td data-rot="O que aconteceu"><span class="leads__pill leads__pill--ok">agendou</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="leads__foot">
+            É esse registro que diz o que mudar na campanha no dia seguinte.
+            Ele depende da clínica me devolver o que aconteceu com cada
+            contato, então funciona como trabalho conjunto.
+          </p>
+        </div>
+
+        <!-- Nota, não card: card transformaria a observação em produto e
+             soaria arrogante. Nota lê como comentário técnico. -->
+        <blockquote class="metodo__nota" data-reveal>
+          Em procedimento de alto ticket, preço não é a primeira informação.
+          O paciente precisa entender o que está comprando antes de ouvir o
+          número, senão o número vira a única coisa que ele tem para julgar.
+          Isso se combina com quem atende o telefone, não com o anúncio.
+        </blockquote>
       </div>
     </section>
 
@@ -219,7 +338,7 @@
         <p class="trafego__eyebrow" data-reveal>TRÁFEGO PAGO</p>
 
         <h2 class="trafego__headline" data-reveal>
-          Não gerencio anúncio. Gerencio resultado.
+          Campanha, site e o que acontece depois do clique.
         </h2>
 
         <div class="trafego__grid">
@@ -227,36 +346,37 @@
             <span class="trafego__item-index">01</span>
             <h3 class="trafego__item-title">Gestão de Tráfego Pago</h3>
             <p class="trafego__item-text">
-              Campanhas no Meta Ads e Google Ads com acompanhamento e
-              otimização contínua — não é subir anúncio e torcer.
+              Campanhas no Meta Ads e Google Ads, com análise diária e ajuste
+              feito a partir do que a planilha de leads mostra, não só do que o
+              gerenciador mostra.
             </p>
           </div>
 
           <div class="trafego__item" data-reveal>
             <span class="trafego__item-index">02</span>
-            <h3 class="trafego__item-title">Landing Pages de Alta Conversão</h3>
+            <h3 class="trafego__item-title">Landing pages para campanha</h3>
             <p class="trafego__item-text">
-              Landing page no ar em até 7 dias, otimizada pra SEO e pronta pra
-              conversão desde o primeiro clique.
+              Página no ar em até 7 dias, escrita para conversar com o anúncio
+              que trouxe a pessoa até ela.
             </p>
           </div>
 
           <div class="trafego__item" data-reveal>
             <span class="trafego__item-index">03</span>
-            <h3 class="trafego__item-title">Sites Completos</h3>
+            <h3 class="trafego__item-title">Sites completos</h3>
             <p class="trafego__item-text">
-              Do zero, design e código, construídos pra sustentar a campanha,
-              não só existir.
+              Do zero, design e código, construídos em torno do agendamento e
+              preparados para receber tráfego pago.
             </p>
           </div>
 
           <div class="trafego__item" data-reveal>
             <span class="trafego__item-index">04</span>
-            <h3 class="trafego__item-title">Sistemas de Integração com Meta</h3>
+            <h3 class="trafego__item-title">Integração com a API da Meta</h3>
             <p class="trafego__item-text">
               Sistemas internos pra agências e clínicas que conectam com a API
               de Conversões da Meta, enviando os dados de lead direto do
-              servidor — mais precisão que o pixel sozinho, e um painel interno
+              servidor, mais precisão que o pixel sozinho, e um painel interno
               centralizando os resultados.
             </p>
           </div>
@@ -265,29 +385,26 @@
         <!-- Tags técnicas — mesmo estilo pill do resto do site. -->
         <ul class="trafego__tags" data-reveal>
           <li class="trafego__tag">SEO otimizado</li>
-          <li class="trafego__tag">Mapa de calor</li>
+          <li class="trafego__tag">Planilha de leads</li>
           <li class="trafego__tag">Pixel configurado</li>
           <li class="trafego__tag">7 dias no ar</li>
-          <li class="trafego__tag">Performance orgânica</li>
+          <li class="trafego__tag">Análise diária</li>
         </ul>
 
         <!-- Faixa de números — contam de 0 ao entrar na tela; "Campanhas
              ativas" (accent, com bolinha pulsando) varia sozinho ao vivo. -->
         <div class="trafego__stats" data-reveal>
           <div class="trafego__stat">
-            <span class="trafego__stat-value" data-count-to="30" data-suffix="+">0</span>
+            <span class="trafego__stat-value" data-count-to="15" data-suffix="+">0</span>
             <span class="trafego__stat-label">Clientes atendidos</span>
           </div>
           <div class="trafego__stat">
             <span class="trafego__stat-value" data-count-to="50" data-prefix="R$ " data-suffix=" mil+">0</span>
             <span class="trafego__stat-label">Investido em mídia</span>
           </div>
-          <div class="trafego__stat trafego__stat--live">
-            <span class="trafego__stat-value" id="stat-campanhas" data-count-to="46">0</span>
-            <span class="trafego__stat-label">
-              <span class="trafego__stat-dot" aria-hidden="true"></span>
-              Campanhas ativas
-            </span>
+          <div class="trafego__stat">
+            <span class="trafego__stat-value" data-count-to="4">0</span>
+            <span class="trafego__stat-label">Especialidades atendidas</span>
           </div>
         </div>
       </div>
@@ -301,29 +418,30 @@
         <h2 class="about__headline" data-reveal>Lucas Bithencourt Florencio</h2>
 
         <p class="about__bio" data-reveal>
-          Comecei cedo — vídeo game me levou pra tecnologia, tecnologia me
+          Comecei cedo: vídeo game me levou pra tecnologia, tecnologia me
           levou pra internet. Fiz técnico em Informática no CEDUP Abílio
-          Paulo, onde aprendi a programar e descobri que design não é enfeite:
-          é lógica aplicada. Migrei pra social media — posts, outdoor, flyer,
+          Paulo, onde aprendi a programar e a entender a lógica que sustenta uma
+          peça de comunicação. Migrei pra social media: posts, outdoor, flyer,
           pôster. Em 2022 entrei numa imobiliária pra tocar o marketing deles
           e aprendi, na prática, a lógica por trás de cada peça. 2025 foi o
-          ponto de virada: entrei na agência FEMO e passei a unir tudo —
+          ponto de virada: entrei na agência FEMO e passei a unir tudo,
           social media, captação externa, roteiro, tráfego pago e
-          desenvolvimento — num só ofício. Hoje trabalho com tráfego pago e
-          crio sites e sistemas que convertem.
+          desenvolvimento, num só ofício. Hoje trabalho com tráfego pago para clínicas
+          e consultórios, e construo os sites e sistemas que sustentam essas
+          campanhas.
         </p>
 
         <p class="about__accent" data-reveal>
-          Sites assertivos. Tráfego previsível. Estratégia bem direcionada.
+          Roteiro antes do anúncio. Análise diária. Acompanhamento até o agendamento.
         </p>
 
         <ul class="about__formacao" data-reveal>
-          <li class="about__formacao-item">Técnico em Informática — CEDUP Abílio Paulo</li>
-          <li class="about__formacao-item">Tráfego Pago — SATC</li>
-          <li class="about__formacao-item">Publicidade e Propaganda — SATC (em andamento)</li>
-          <li class="about__formacao-item">Marketing Digital — curso online</li>
-          <li class="about__formacao-item">Formação prática — Triplo X (aulas com gestores de tráfego e desenvolvedores, parceria Blueberry)</li>
-          <li class="about__formacao-item">Estudo contínuo — pesquisa autodidata</li>
+          <li class="about__formacao-item">Técnico em Informática, CEDUP Abílio Paulo</li>
+          <li class="about__formacao-item">Tráfego Pago, SATC</li>
+          <li class="about__formacao-item">Publicidade e Propaganda, SATC (em andamento)</li>
+          <li class="about__formacao-item">Marketing Digital, curso online</li>
+          <li class="about__formacao-item">Formação prática, Triplo X (aulas com gestores de tráfego e desenvolvedores, parceria Blueberry)</li>
+          <li class="about__formacao-item">Estudo contínuo, pesquisa autodidata</li>
         </ul>
       </div>
     </section>
@@ -334,7 +452,7 @@
         <p class="contact__eyebrow" data-reveal>CONTATO</p>
 
         <h2 class="contact__headline" data-reveal>
-          Vamos construir algo que converte.
+          Me conta sobre o seu negócio.
         </h2>
 
         <div class="contact__links">
@@ -382,7 +500,7 @@
           <div class="case-modal__actions">
             <a class="case-modal__live" target="_blank" rel="noopener">Ver site ao vivo ↗</a>
             <a class="case-modal__whatsapp" href="https://wa.me/5548999337562" target="_blank" rel="noopener">
-              Quero um site assim
+              Conversar sobre um projeto
             </a>
           </div>
         </div>
@@ -392,9 +510,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/14.0.5/swiper-bundle.min.js"></script>
 
     <!-- Script clássico (usa os globais acima; sem import/export). -->
-    <script src="main.js?v=27"></script>
+    <script src="main.js?v=36"></script>
   </body>
 </html>

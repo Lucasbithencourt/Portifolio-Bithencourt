@@ -115,12 +115,84 @@ button:focus-visible,
   align-items: center;
   justify-content: center;
   padding: clamp(2rem, 6vw, 5rem);
+  /* a faixa/letreiro ocupa a base: o conteúdo reserva esse espaço pra não
+     terminar atrás dela em telas de pouca altura */
+  padding-bottom: clamp(11rem, 17vw, 15rem);
   overflow: hidden;
+}
+
+/* =========================================================================
+   WAVE DIVISÓRIA (hero → próxima seção)
+   Onda de LUZ, não de cor: o fundo é o mesmo preto dos dois lados, então
+   uma onda sólida cortaria o céu estrelado ao meio. Aqui, um traço no
+   vermelho de acento com brilho difuso marca a divisa e um preenchimento
+   quase preto dá peso à base. Puro SVG + CSS: zero custo por frame.
+   ========================================================================= */
+.hero__wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;              /* evita a fresta de 1px do arredondamento */
+  z-index: 4;                /* acima dos ícones flutuantes do hero */
+  pointer-events: none;
+  line-height: 0;
+}
+/* O viewBox é montado por JS na largura real (1 unidade = 1 pixel), então
+   a fita tem a MESMA espessura e a MESMA letra em qualquer monitor. A
+   altura é aplicada inline pelo próprio JS. */
+.hero__wave-svg {
+  display: block;
+  width: 100%;
+}
+
+/* Corpo SÓLIDO da faixa: nada de véu translúcido. Vermelho profundo da
+   identidade, escurecido pra ainda ser um fundo (e não gritar mais que o
+   conteúdo do hero). */
+.hero__wave-band {
+  fill: #7d1f1c;
+}
+
+/* Borda de cima: linha luminosa que separa hero e faixa. */
+.hero__wave-line {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 7px rgba(226, 69, 63, 0.7))
+          drop-shadow(0 0 20px rgba(226, 69, 63, 0.4));
+}
+
+.hero__wave-line--soft {
+  opacity: 0.45;
+  stroke-width: 1;
+  filter: none;
+}
+
+/* O letreiro: texto correndo pela curva. Tamanho em unidades do viewBox
+   (1440 de largura), então escala junto com a faixa. */
+.hero__wave-text {
+  font-family: var(--font-sans);
+  font-size: 13px;           /* px reais (viewBox 1:1) em qualquer tela */
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  fill: #fff;
+}
+/* separador entre as frases, no tom claro do vermelho */
+.hero__wave-text tspan.sep {
+  fill: rgba(255, 255, 255, 0.45);
+  font-weight: 400;
+}
+
+/* Telas estreitas: menos altura de faixa disponível, então o texto cresce
+   proporcionalmente pra continuar legível. */
+@media (max-width: 900px) {
+  .hero__wave-text { font-size: 12px; letter-spacing: 0.12em; }
 }
 
 .hero__content {
   position: relative;
-  z-index: 2;
+  z-index: 5;                /* acima da faixa: o CTA nunca fica atrás dela */
   max-width: 42rem;
   margin: 0 auto;
   text-align: center;
@@ -160,7 +232,7 @@ button:focus-visible,
 }
 
 .hero__title {
-  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  font-size: clamp(2rem, 7vw, 4.5rem);
   font-weight: 700;
   line-height: 1.04;
   letter-spacing: -0.02em;
@@ -177,7 +249,12 @@ button:focus-visible,
    inline-block é o que faz esse min-width valer sem quebrar o fluxo. */
 .hero__title-rotate {
   display: inline-block;
-  text-align: left; /* palavra ancorada logo após "que", folga fica no fim */
+  /* CENTRALIZADO, não à esquerda: o min-width reserva o espaço da MAIOR
+     palavra: com text-align:left a palavra ficava colada nesse canto e o
+     conjunto saía do eixo do título — e o desvio mudava a cada troca
+     ("vende." saía mais que "performa."), o que dava a sensação de
+     desalinhamento. Centrado, toda palavra cai no mesmo eixo. */
+  text-align: center;
   color: var(--color-accent);
 }
 
@@ -442,20 +519,20 @@ button:focus-visible,
 }
 
 /* 14 posições espalhadas de forma equilibrada ao redor do conteúdo central. */
-.hero__icon--1  { top: 12%;    left: 8%;  }
-.hero__icon--2  { top: 30%;    left: 4%;  }
-.hero__icon--3  { top: 50%;    left: 8%;  }
-.hero__icon--4  { top: 70%;    left: 5%;  }
-.hero__icon--5  { bottom: 10%; left: 14%; }
-.hero__icon--6  { top: 12%;    right: 9%; }
-.hero__icon--7  { top: 30%;    right: 4%; }
-.hero__icon--8  { top: 50%;    right: 7%; }
-.hero__icon--9  { top: 70%;    right: 5%; }
-.hero__icon--10 { bottom: 10%; right: 13%; }
-.hero__icon--11 { top: 6%;     left: 38%; }
-.hero__icon--12 { top: 8%;     right: 34%; }
-.hero__icon--13 { bottom: 6%;  left: 40%; }
-.hero__icon--14 { bottom: 8%;  right: 36%; }
+.hero__icon--1 { top: 13%;    left: 9%; }
+.hero__icon--2 { top: 29%;    left: 4%; }
+.hero__icon--3 { top: 45%;    left: 8%; }
+.hero__icon--4 { top: 61%;    left: 4%; }   /* subiu: roçava a faixa */
+.hero__icon--5 { top: 76%;    left: 11%; }   /* subiu: a faixa ocupa a base */
+.hero__icon--6 { top: 13%;    right: 9%; }
+.hero__icon--7 { top: 29%;    right: 4%; }
+.hero__icon--8 { top: 45%;    right: 8%; }
+.hero__icon--9 { top: 61%;    right: 4%; }  /* subiu: roçava a faixa */
+.hero__icon--10 { top: 76%;    right: 11%; }  /* subiu: a faixa ocupa a base */
+.hero__icon--11 { top: 6%;     left: 29%; }
+.hero__icon--12 { top: 6%;     right: 28%; }
+.hero__icon--13 { top: 74%;    left: 30%; }   /* saiu da base p/ o alto */
+.hero__icon--14 { top: 74%;    right: 29%; }  /* saiu da base p/ o alto */
 
 /* Mobile: mostra só 7 dos 14 (instagram, whatsapp, github, meta, google,
    figma, facebook) e empilha os botões. */
@@ -744,17 +821,25 @@ button:focus-visible,
    O slide central fica em foco; os laterais recuam via translateZ
    (depth do coverflow) + opacidade menor, criando as camadas.
    --------------------------------------------------------- */
-.cases-swiper {
-  max-width: 90rem;
-  margin: 0 auto;
-  padding-bottom: 3.5rem; /* espaço para a paginação */
-  /* Tokens do site no lugar do azul padrão do Swiper. */
-  --swiper-theme-color: var(--color-accent);
-  --swiper-navigation-color: var(--color-fg);
-  --swiper-navigation-size: 28px;
-  --swiper-pagination-color: var(--color-accent);
-  --swiper-pagination-bullet-inactive-color: var(--color-fg);
-  --swiper-pagination-bullet-inactive-opacity: 0.25;
+/* MARQUEE de cases: a janela recorta a trilha e as bordas se dissolvem
+   (mask), então os cards "surgem do nada" e "somem no nada" em vez de
+   aparecerem cortados na beirada da tela. */
+.cases-marquee {
+  overflow: hidden;
+  padding: 0.5rem 0 1.5rem;
+  -webkit-mask-image: linear-gradient(90deg,
+    transparent 0, #000 9%, #000 91%, transparent 100%);
+  mask-image: linear-gradient(90deg,
+    transparent 0, #000 9%, #000 91%, transparent 100%);
+}
+
+/* A trilha: linha única de cards que o GSAP desloca no eixo X.
+   will-change promove a camada; o movimento é só transform (GPU). */
+.cases-track {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
+  will-change: transform;
 }
 
 .case-slide {
@@ -765,8 +850,18 @@ button:focus-visible,
   border: 1px solid var(--card-border);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
-  opacity: 0.45; /* laterais recuados */
-  transition: opacity 0.4s ease, border-color 0.4s ease;
+  flex: 0 0 auto;              /* não encolhe dentro do flex da trilha */
+  opacity: 0.62;               /* em repouso, recuado */
+  transition: opacity 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+}
+
+/* Foco agora é por HOVER (o marquee não tem "slide central"): o card sob o
+   cursor acende e sobe de leve. Como o hover também congela a trilha, dá
+   pra ler o card com calma. */
+.case-slide:hover {
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-4px);
 }
 
 .case-slide img {
@@ -775,12 +870,6 @@ button:focus-visible,
   aspect-ratio: 16 / 10;
   object-fit: cover;
   object-position: top center;
-}
-
-/* Slide central — em destaque. */
-.cases-swiper .swiper-slide-active.case-slide {
-  opacity: 1;
-  border-color: rgba(255, 255, 255, 0.16);
 }
 
 /* Faixa de info — mesmo vidro dos outros cards do site. */
@@ -812,33 +901,9 @@ button:focus-visible,
   color: var(--color-muted);
 }
 
-/* Setas: pílula de vidro, no lugar do estilo padrão do Swiper. */
-.cases-swiper .swiper-button-prev,
-.cases-swiper .swiper-button-next {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-pill);
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  transition: border-color 0.25s ease, background-color 0.25s ease;
-}
-.cases-swiper .swiper-button-prev:hover,
-.cases-swiper .swiper-button-next:hover {
-  border-color: var(--color-accent);
-  background: rgba(255, 255, 255, 0.08);
-}
-.cases-swiper .swiper-button-prev::after,
-.cases-swiper .swiper-button-next::after {
-  font-size: 16px;
-  font-weight: 700;
-}
-
 @media (max-width: 640px) {
   .case-slide { width: min(78vw, 340px); }
-  .cases-swiper .swiper-button-prev,
-  .cases-swiper .swiper-button-next { display: none; }
+  .cases-track { gap: 1rem; }
 }
 
 /* Slide é clicável (abre o modal) — cursor e foco visível. */
@@ -1752,4 +1817,180 @@ html.reduced-motion #contact [data-reveal] {
   opacity: 1 !important;
   transform: none !important;
   visibility: visible !important;
+}
+
+/* =========================================================
+   MÉTODO — "como eu trabalho"
+   Reusa .trafego__grid e .trafego__item (mesmo card de vidro).
+   O que é novo aqui: a planilha de leads (o artefato que prova o
+   método) e a nota de consultoria, que é observação e não produto.
+   ========================================================= */
+.metodo {
+  position: relative;
+  z-index: 2;
+  padding: clamp(4rem, 10vw, 9rem) clamp(1.5rem, 6vw, 6rem);
+  border-top: 1px solid var(--color-accent-soft);
+}
+.metodo__inner { max-width: 72rem; margin: 0 auto; }
+.metodo__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  color: var(--color-accent);
+  margin-bottom: 1.25rem;
+}
+.metodo__headline {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.25rem;
+  max-width: 20ch;
+}
+.metodo__lead {
+  color: var(--color-muted);
+  font-size: clamp(1rem, 1.4vw, 1.1rem);
+  line-height: 1.7;
+  max-width: 56ch;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+.metodo__grid { margin-bottom: clamp(2rem, 4vw, 3.5rem); }
+
+/* ── A planilha de leads (o artefato) ── */
+.leads {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+.leads__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.leads__title { font-weight: 700; font-size: 1rem; }
+.leads__note {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+}
+/* tabela larga rola sozinha: a página nunca rola de lado */
+.leads__scroll { overflow-x: auto; }
+.leads__table {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.leads__table th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  padding: 0 0.9rem 0.7rem 0;
+  border-bottom: 1px solid var(--card-border);
+}
+.leads__table td {
+  padding: 0.8rem 0.9rem 0.8rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+  color: var(--color-muted);
+}
+.leads__table td:first-child { font-family: var(--font-mono); color: var(--color-fg); }
+.leads__pill {
+  display: inline-block;
+  padding: 4px 11px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--card-border);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+.leads__pill--ok {
+  border-color: rgba(226, 69, 63, 0.45);
+  color: var(--color-fg);
+  background: rgba(226, 69, 63, 0.12);
+}
+.leads__foot {
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--color-muted);
+  max-width: 60ch;
+}
+
+/* ── Nota de consultoria: observação, não card ── */
+.metodo__nota {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding-left: 1.4rem;
+  border-left: 2px solid var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: var(--color-muted);
+  max-width: 62ch;
+}
+
+@media (max-width: 640px) {
+  .metodo__nota { font-size: 0.85rem; padding-left: 1rem; }
+}
+
+/* No celular a tabela viraria rolagem lateral e esconderia justamente a
+   coluna que importa (o motivo). Então cada linha vira um bloco com o
+   rótulo ao lado do valor, e nada fica fora da tela. */
+@media (max-width: 640px) {
+  .leads__scroll { overflow-x: visible; }
+  .leads__table { min-width: 0; display: block; }
+  .leads__table thead { display: none; }
+  .leads__table tbody,
+  .leads__table tr,
+  .leads__table td { display: block; width: 100%; }
+  .leads__table tr {
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.7rem;
+  }
+  .leads__table tr:last-child { margin-bottom: 0; }
+  .leads__table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.3rem 0;
+    border-bottom: 0;
+    text-align: right;
+  }
+  .leads__table td::before {
+    content: attr(data-rot);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    opacity: 0.7;
+    text-align: left;
+    flex-shrink: 0;
+  }
+}
+
+/* No celular a palavra rotativa não cabia ao lado do "o", que sobrava
+   sozinho numa linha com ela. Em bloco, o "o" fecha a linha de cima e a
+   palavra fica inteira na sua própria linha. */
+@media (max-width: 640px) {
+  .hero__title-rotate { min-width: 0 !important; }
+}
+
+/* No celular os ícones flutuantes caem atrás da headline e aparecem nos
+   vãos das letras, atrapalhando a leitura. Continuam ali como textura,
+   só que discretos o bastante pra não competir com o título. */
+@media (max-width: 640px) {
+  .hero__icon { opacity: 0.3; }
 }
