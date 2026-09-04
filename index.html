@@ -16,16 +16,18 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
     <link rel="preconnect" href="https://unpkg.com" />
 
-    <!-- Open Graph / Twitter. TODO: trocar seudominio.com pelo domínio real. -->
+    <link rel="canonical" href="https://lucasbithencourt.vercel.app/" />
+
+    <!-- Open Graph / Twitter. -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://seudominio.com/" />
+    <meta property="og:url" content="https://lucasbithencourt.vercel.app/" />
     <meta property="og:title" content="Lucas Bithencourt | Tráfego pago e sites, com especialidade em saúde" />
     <meta
       property="og:description"
       content="Gestão de tráfego pago, sites e acompanhamento de leads. Trabalho principalmente com clínicas e consultórios, e acompanho o caminho do anúncio até o agendamento."
     />
     <!-- TODO: trocar por uma imagem OG dedicada 1200x630 quando tiver. -->
-    <meta property="og:image" content="https://seudominio.com/frames/0221.webp" />
+    <meta property="og:image" content="https://lucasbithencourt.vercel.app/frames/0221.webp" />
     <meta name="twitter:card" content="summary_large_image" />
 
 
@@ -109,7 +111,7 @@
           Eu acompanho até o <span class="hero__title-rotate" data-words="agendamento,retorno,fechamento">agendamento.</span>
         </h1>
         <p class="hero__sub">
-          Entro no negócio, acompanho cada lead e ajusto todo dia.
+          Entro no negócio, acompanho cada lead e leio os dados todo dia.
           Trabalho principalmente com clínicas e consultórios.
         </p>
         <div class="hero__ctas">
@@ -319,7 +321,8 @@
             </table>
           </div>
           <p class="leads__foot">
-            É esse registro que diz o que mudar na campanha no dia seguinte.
+            É esse registro que mostra a hora de mexer na campanha, e a hora
+            de deixar ela rodar.
             Ele depende da clínica me devolver o que aconteceu com cada
             contato, então funciona como trabalho conjunto.
           </p>
@@ -350,9 +353,9 @@
             <span class="trafego__item-index">01</span>
             <h3 class="trafego__item-title">Gestão de Tráfego Pago</h3>
             <p class="trafego__item-text">
-              Campanhas no Meta Ads e Google Ads, com análise diária e ajuste
-              feito a partir do que a planilha de leads mostra, não só do que o
-              gerenciador mostra.
+              Campanhas no Meta Ads e Google Ads. A leitura é diária, o ajuste
+              não: mexer sem motivo reinicia o aprendizado da campanha. A
+              mudança vem quando a planilha de leads justifica.
             </p>
           </div>
 
@@ -410,6 +413,18 @@
             <span class="trafego__stat-value" data-count-to="4">0</span>
             <span class="trafego__stat-label">Especialidades atendidas</span>
           </div>
+        </div>
+
+        <!-- CTA — os números reais das campanhas não ficam abertos na
+             página: quem quiser ver passa pelo formulário de contato. -->
+        <div class="trafego__cta" data-reveal>
+          <p class="trafego__cta-text">
+            Os resultados reais das campanhas, prints do gerenciador, custo
+            por conversa e volume de agendamento, eu apresento direto com você.
+          </p>
+          <button class="trafego__cta-btn" type="button" data-open-lead>
+            Ver cases
+          </button>
         </div>
       </div>
     </section>
@@ -489,6 +504,78 @@
     <!-- Bibliotecas (globais window.gsap / window.ScrollTrigger / window.Lenis). -->
     <!-- MODAL DE CASE — preenchido via JS ao clicar num slide do carrossel.
          As páginas case-XX.html seguem existindo como link direto/SEO. -->
+    <!-- FORMULÁRIO DE CASES — abre pelo botão "Ver cases". Captura nome,
+         WhatsApp e e-mail, grava no Supabase e mostra a confirmação. Fecha
+         no Esc, no X ou clicando no fundo. -->
+    <div class="lead-modal" id="lead-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="lead-modal-title">
+      <div class="lead-modal__panel">
+        <button class="lead-modal__close" type="button" aria-label="Fechar">&times;</button>
+
+        <!-- Etapa 1: formulário -->
+        <div class="lead-modal__step" id="lead-step-form">
+          <p class="lead-modal__eyebrow">CASES DE TRÁFEGO PAGO</p>
+          <h3 class="lead-modal__title" id="lead-modal-title">
+            Deixe seu contato que eu apresento os resultados
+          </h3>
+          <p class="lead-modal__lead">
+            Preencho com você os números reais das campanhas que gerencio:
+            investimento, custo por conversa e volume de agendamento.
+          </p>
+
+          <form class="lead-form" id="lead-form" novalidate>
+            <div class="lead-form__field">
+              <label for="lead-nome">Nome</label>
+              <input type="text" id="lead-nome" name="nome" autocomplete="name" required maxlength="120" />
+              <span class="lead-form__error" data-error-for="lead-nome"></span>
+            </div>
+
+            <div class="lead-form__field">
+              <label for="lead-whatsapp">WhatsApp</label>
+              <input type="tel" id="lead-whatsapp" name="whatsapp" autocomplete="tel" inputmode="tel" placeholder="(48) 99999-9999" required maxlength="20" />
+              <span class="lead-form__error" data-error-for="lead-whatsapp"></span>
+            </div>
+
+            <div class="lead-form__field">
+              <label for="lead-email">E-mail</label>
+              <input type="email" id="lead-email" name="email" autocomplete="email" required maxlength="160" />
+              <span class="lead-form__error" data-error-for="lead-email"></span>
+            </div>
+
+            <!-- Armadilha de spam: fica escondida, humano nunca preenche. -->
+            <div class="lead-form__trap" aria-hidden="true">
+              <label for="lead-empresa">Não preencha este campo</label>
+              <input type="text" id="lead-empresa" name="empresa" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <button class="lead-form__submit" type="submit">Enviar</button>
+
+            <p class="lead-form__note">
+              Seus dados são usados só para esse contato. Não repasso a
+              ninguém.
+            </p>
+
+            <p class="lead-form__fail" id="lead-form-fail" hidden>
+              Não consegui enviar agora. Tente de novo ou chame no
+              <a href="https://wa.me/5548999337562" target="_blank" rel="noopener">WhatsApp</a>.
+            </p>
+          </form>
+        </div>
+
+        <!-- Etapa 2: confirmação -->
+        <div class="lead-modal__step" id="lead-step-done" hidden>
+          <div class="lead-done__check" aria-hidden="true">&#10003;</div>
+          <h3 class="lead-modal__title">Recebi seus dados</h3>
+          <p class="lead-modal__lead">
+            Vou entrar em contato para apresentar os cases. Se preferir
+            adiantar, é só me chamar no WhatsApp.
+          </p>
+          <a class="lead-done__wpp" href="https://wa.me/5548999337562" target="_blank" rel="noopener">
+            Falar no WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+
     <div class="case-modal" id="case-modal" aria-hidden="true">
       <div class="case-modal__backdrop" data-modal-close></div>
       <div class="case-modal__panel" role="dialog" aria-modal="true" aria-labelledby="case-modal-title">

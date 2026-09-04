@@ -1,5 +1,5 @@
 /* =========================================================================
-   PORTFÓLIO — Dark Sci-Fi (acento VERMELHO #e60000)
+   PORTFÓLIO — Dark Sci-Fi (acento VERDE ESCURO #1f7a4e)
    Script ÚNICO e compartilhado entre páginas (index.html, case.html).
    Cada módulo é blindado: só inicializa se os elementos da página existirem.
    GSAP (ScrollTrigger) + Lenis + Canvas 2D · Vanilla
@@ -1414,46 +1414,6 @@ function initTrafegoStats() {
     });
   }
 
-  // Contador "ao vivo" REMOVIDO: sorteava um número entre 40 e 50 e o exibia
-  // como se fosse dado real. Métrica inventada não sustenta credibilidade.
-  const live = document.getElementById("stat-campanhas");
-  const LIVE_MIN = 40;
-  const LIVE_MAX = 50;
-  let liveTimer = null;
-  let livePaused = false;
-
-  // Loop "ao vivo" das campanhas ativas: delta -3..+3 (sem 0), preso a 40–50.
-  function scheduleLive() {
-    clearTimeout(liveTimer);
-    liveTimer = setTimeout(tickLive, gsap.utils.random(4000, 9000));
-  }
-
-  function tickLive() {
-    if (document.hidden) {
-      livePaused = true; // retomado no visibilitychange
-      return;
-    }
-    const cur = parseInt(live.textContent, 10) || LIVE_MIN;
-    let delta = Math.round(gsap.utils.random(-3, 3));
-    if (delta === 0) delta = Math.random() < 0.5 ? -1 : 1;
-    let next = cur + delta;
-    if (next < LIVE_MIN || next > LIVE_MAX) next = cur - delta; // inverte se estourar
-    next = Math.max(LIVE_MIN, Math.min(LIVE_MAX, next));
-
-    // "Pisca e troca": fade/scale rápido no próprio número.
-    gsap.to(live, {
-      opacity: 0.2,
-      scale: 0.9,
-      duration: 0.15,
-      ease: "power1.in",
-      onComplete: () => {
-        live.textContent = next;
-        gsap.to(live, { opacity: 1, scale: 1, duration: 0.15, ease: "power1.out" });
-      },
-    });
-    scheduleLive();
-  }
-
   // Acessibilidade: sem contagem nem loop — números fixos no valor final.
   if (prefersReducedMotion) {
     fillFinal();
@@ -1478,26 +1438,12 @@ function initTrafegoStats() {
           },
           onComplete: () => {
             el.textContent = format(el, target);
-            // Terminou a contagem inicial das campanhas? Começa o "ao vivo".
-            if (el === live) scheduleLive();
           },
         });
       });
     },
   });
 
-  // Aba oculta pausa o loop; ao voltar, retoma de onde parou.
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      clearTimeout(liveTimer);
-      livePaused = true;
-      return;
-    }
-    if (livePaused) {
-      livePaused = false;
-      scheduleLive();
-    }
-  });
 }
 
 /* =========================================================================
@@ -1511,8 +1457,178 @@ if (heroCanvas) {
   lenis.start();
 }
 
+/* =========================================================================
+   FORMULÁRIO DE CASES — o botão "Ver cases" abre um modal com nome,
+   WhatsApp e e-mail. O envio grava a linha no Supabase e troca o painel
+   pela confirmação. Blindado: só roda se o modal existir na página.
+
+   As credenciais abaixo são públicas por natureza (a chave anon fica
+   visível no navegador de qualquer visitante). Quem protege a tabela é a
+   política de RLS no Supabase: anon PODE inserir e NÃO pode ler. Sem essa
+   política, qualquer um leria a lista de leads.
+   ========================================================================= */
+const LEADS_SUPABASE_URL = "https://qmefpolskyywikeendja.supabase.co";
+const LEADS_SUPABASE_KEY = "sb_publishable_OBalRC9IUE5lsI3qjc3_lA_WJjn7bGA";
+const LEADS_TABELA = "leads";
+
+function initLeadModal() {
+  const modal = document.getElementById("lead-modal");
+  const form = document.getElementById("lead-form");
+  const stepForm = document.getElementById("lead-step-form");
+  const stepDone = document.getElementById("lead-step-done");
+  const falha = document.getElementById("lead-form-fail");
+  const closeBtn = modal && modal.querySelector(".lead-modal__close");
+  const triggers = document.querySelectorAll("[data-open-lead]");
+  if (!modal || !form || !stepForm || !stepDone || !closeBtn) return;
+
+  const submitBtn = form.querySelector(".lead-form__submit");
+  let lastTrigger = null;
+
+  function open(trigger) {
+    lastTrigger = trigger || null;
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    lenis.stop();
+    const primeiro = form.querySelector("#lead-nome");
+    if (primeiro && !stepForm.hidden) primeiro.focus();
+    else closeBtn.focus();
+  }
+
+  function close() {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    lenis.start();
+    if (lastTrigger) lastTrigger.focus();
+    lastTrigger = null;
+  }
+
+  triggers.forEach((t) => t.addEventListener("click", () => open(t)));
+  closeBtn.addEventListener("click", close);
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) close();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("is-open")) close();
+  });
+
+  /* --- Validação --- */
+  function erro(campo, msg) {
+    const alvo = form.querySelector('[data-error-for="' + campo.id + '"]');
+    if (alvo) {
+      alvo.textContent = msg || "";
+      alvo.classList.toggle("is-visible", Boolean(msg));
+    }
+    campo.classList.toggle("is-invalid", Boolean(msg));
+    return !msg;
+  }
+
+  function valida() {
+    const nome = form.querySelector("#lead-nome");
+    const whatsapp = form.querySelector("#lead-whatsapp");
+    const email = form.querySelector("#lead-email");
+
+    const okNome = erro(
+      nome,
+      nome.value.trim().length < 2 ? "Escreva seu nome." : ""
+    );
+
+    // Aceita qualquer formatação; o que importa é ter DDD + número.
+    const digitos = whatsapp.value.replace(/\D/g, "");
+    const okZap = erro(
+      whatsapp,
+      digitos.length < 10 || digitos.length > 13
+        ? "Informe o WhatsApp com DDD."
+        : ""
+    );
+
+    const okMail = erro(
+      email,
+      /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim())
+        ? ""
+        : "E-mail inválido."
+    );
+
+    return okNome && okZap && okMail;
+  }
+
+  // Limpa o erro assim que a pessoa corrige o campo.
+  form.querySelectorAll("input").forEach((input) => {
+    input.addEventListener("input", () => {
+      if (input.classList.contains("is-invalid")) erro(input, "");
+    });
+  });
+
+  /* --- Envio --- */
+  async function grava(dados) {
+    if (!LEADS_SUPABASE_URL || !LEADS_SUPABASE_KEY) {
+      throw new Error("Supabase ainda não configurado.");
+    }
+
+    const resp = await fetch(
+      LEADS_SUPABASE_URL + "/rest/v1/" + LEADS_TABELA,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: LEADS_SUPABASE_KEY,
+          Authorization: "Bearer " + LEADS_SUPABASE_KEY,
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify(dados),
+      }
+    );
+
+    if (!resp.ok) {
+      throw new Error("Supabase respondeu " + resp.status);
+    }
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    falha.hidden = true;
+
+    // Robô preencheu o campo escondido: finge que deu certo e não grava.
+    const trap = form.querySelector("#lead-empresa");
+    if (trap && trap.value) {
+      stepForm.hidden = true;
+      stepDone.hidden = false;
+      return;
+    }
+
+    if (!valida()) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Enviando...";
+
+    try {
+      await grava({
+        nome: form.querySelector("#lead-nome").value.trim(),
+        whatsapp: form.querySelector("#lead-whatsapp").value.trim(),
+        email: form.querySelector("#lead-email").value.trim(),
+        origem: "botao-ver-cases",
+      });
+
+      stepForm.hidden = true;
+      stepDone.hidden = false;
+      closeBtn.focus();
+      form.reset();
+    } catch (err) {
+      falha.hidden = false;
+      console.error("[lead]", err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Enviar";
+    }
+  });
+}
+
 initPortfolioReveal();
 initCasesMarquee();
+initLeadModal();
 initWave();
 initCaseModal();
 initHeroIcons();

@@ -7,8 +7,10 @@
   --color-bg: #0b0b0d;             /* preto neutro, levemente azulado */
   --color-fg: #f2f2f2;
   --color-muted: #9a9a9e;          /* cinza neutro */
-  --color-accent: #e2453f;         /* vermelho de acento (menos agressivo) */
+  --color-accent: #1f7a4e;         /* verde escuro de acento */
   --color-accent-soft: rgba(255, 255, 255, 0.08); /* bordas/separadores neutros */
+  --color-accent-rgb: 31, 122, 78;  /* o acento em RGB, pra usar com alpha */
+  --color-accent-deep: #14512f;     /* acento escurecido: fita da wave */
   --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
@@ -149,7 +151,7 @@ button:focus-visible,
    identidade, escurecido pra ainda ser um fundo (e não gritar mais que o
    conteúdo do hero). */
 .hero__wave-band {
-  fill: #7d1f1c;
+  fill: var(--color-accent-deep);
 }
 
 /* Borda de cima: linha luminosa que separa hero e faixa. */
@@ -158,8 +160,8 @@ button:focus-visible,
   stroke: var(--color-accent);
   stroke-width: 2;
   vector-effect: non-scaling-stroke;
-  filter: drop-shadow(0 0 7px rgba(226, 69, 63, 0.7))
-          drop-shadow(0 0 20px rgba(226, 69, 63, 0.4));
+  filter: drop-shadow(0 0 7px rgba(var(--color-accent-rgb), 0.7))
+          drop-shadow(0 0 20px rgba(var(--color-accent-rgb), 0.4));
 }
 
 .hero__wave-line--soft {
@@ -221,8 +223,8 @@ button:focus-visible,
   display: inline-block;
   padding: 5px 14px;
   border-radius: var(--radius-pill);
-  background: rgba(226, 69, 63, 0.1);
-  border: 1px solid rgba(226, 69, 63, 0.25);
+  background: rgba(31, 122, 78, 0.1);
+  border: 1px solid rgba(31, 122, 78, 0.25);
   color: var(--color-accent);
   font-size: 0.72rem;
   font-weight: 600;
@@ -319,9 +321,9 @@ button:focus-visible,
   color: var(--color-bg);
   /* Contorno neon vermelho sutil em repouso, "respirando" devagar. */
   box-shadow:
-    0 0 0 1px rgba(226, 69, 63, 0.35),
-    0 0 8px rgba(226, 69, 63, 0.25),
-    0 0 16px rgba(226, 69, 63, 0.12);
+    0 0 0 1px rgba(31, 122, 78, 0.35),
+    0 0 8px rgba(31, 122, 78, 0.25),
+    0 0 16px rgba(31, 122, 78, 0.12);
   transition: transform 0.25s ease, opacity 0.25s ease, box-shadow 0.3s ease;
   animation: cta-neon-pulse 3s ease-in-out infinite;
 }
@@ -330,10 +332,10 @@ button:focus-visible,
   opacity: 0.9;
   /* Neon "aceso" — bem mais forte; pausa o pulso (estado forte fixo). */
   box-shadow:
-    0 0 0 1.5px rgba(226, 69, 63, 0.9),
-    0 0 14px rgba(226, 69, 63, 0.6),
-    0 0 30px rgba(226, 69, 63, 0.4),
-    0 0 50px rgba(226, 69, 63, 0.2);
+    0 0 0 1.5px rgba(31, 122, 78, 0.9),
+    0 0 14px rgba(31, 122, 78, 0.6),
+    0 0 30px rgba(31, 122, 78, 0.4),
+    0 0 50px rgba(31, 122, 78, 0.2);
   animation-play-state: paused;
 }
 
@@ -341,15 +343,15 @@ button:focus-visible,
   0%,
   100% {
     box-shadow:
-      0 0 0 1px rgba(226, 69, 63, 0.35),
-      0 0 8px rgba(226, 69, 63, 0.25),
-      0 0 16px rgba(226, 69, 63, 0.12);
+      0 0 0 1px rgba(31, 122, 78, 0.35),
+      0 0 8px rgba(31, 122, 78, 0.25),
+      0 0 16px rgba(31, 122, 78, 0.12);
   }
   50% {
     box-shadow:
-      0 0 0 1px rgba(226, 69, 63, 0.45),
-      0 0 10px rgba(226, 69, 63, 0.32),
-      0 0 20px rgba(226, 69, 63, 0.16);
+      0 0 0 1px rgba(31, 122, 78, 0.45),
+      0 0 10px rgba(31, 122, 78, 0.32),
+      0 0 20px rgba(31, 122, 78, 0.16);
   }
 }
 
@@ -786,6 +788,305 @@ button:focus-visible,
   }
 }
 
+/* =========================================================================
+   CTA "VER CASES" — fecha a seção de tráfego pago. Os resultados não ficam
+   abertos na página: o botão abre o formulário de contato.
+   ========================================================================= */
+.trafego__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+}
+
+.trafego__cta-text {
+  flex: 1 1 26ch;
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  line-height: 1.6;
+  color: var(--color-muted);
+  max-width: 52ch;
+}
+
+.trafego__cta-btn {
+  flex: 0 0 auto;
+  padding: 14px 32px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.trafego__cta-btn:hover,
+.trafego__cta-btn:focus-visible {
+  transform: translateY(-2px);
+  filter: brightness(1.15);
+}
+
+/* =========================================================================
+   MODAL DO FORMULÁRIO — duas etapas no mesmo painel: formulário e
+   confirmação. Mesmo card de vidro do resto do site.
+   ========================================================================= */
+.lead-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: rgba(5, 5, 7, 0.9);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.lead-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lead-modal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 30rem;
+  max-height: 100%;
+  overflow-y: auto;
+  /* Rolagem continua funcionando em tela baixa, mas sem a barra à mostra. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  background: #101014;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  transform: translateY(12px);
+  transition: transform 0.3s ease;
+}
+
+.lead-modal__panel::-webkit-scrollbar {
+  display: none;
+}
+
+.lead-modal.is-open .lead-modal__panel {
+  transform: translateY(0);
+}
+
+.lead-modal__close {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--color-fg);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.lead-modal__close:hover,
+.lead-modal__close:focus-visible {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.lead-modal__eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 0.85rem;
+}
+
+.lead-modal__title {
+  font-size: clamp(1.2rem, 2.3vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+  margin-bottom: 0.65rem;
+}
+
+.lead-modal__lead {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  margin-bottom: 1.4rem;
+}
+
+/* --- Campos --- */
+.lead-form__field {
+  margin-bottom: 0.9rem;
+}
+
+.lead-form__field label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-muted);
+  margin-bottom: 0.5rem;
+}
+
+.lead-form__field input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-fg);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.lead-form__field input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.lead-form__field input.is-invalid {
+  border-color: #d4564f;
+}
+
+.lead-form__error {
+  display: none;
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: #e08a85;
+}
+
+.lead-form__error.is-visible {
+  display: block;
+}
+
+/* Armadilha de spam — fora da tela, mas ainda preenchível por robô. */
+.lead-form__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.lead-form__submit {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 14px 24px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-accent);
+  background: var(--color-accent);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
+.lead-form__submit:hover:not(:disabled),
+.lead-form__submit:focus-visible:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+.lead-form__submit:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.lead-form__note {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.lead-form__fail {
+  margin-top: 1rem;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 86, 79, 0.4);
+  background: rgba(212, 86, 79, 0.1);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #e08a85;
+}
+
+.lead-form__fail a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+/* --- Confirmação --- */
+.lead-done__check {
+  width: 52px;
+  height: 52px;
+  margin-bottom: 1.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--color-accent);
+  background: rgba(31, 122, 78, 0.12);
+  border: 1px solid rgba(31, 122, 78, 0.35);
+}
+
+.lead-done__wpp {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--color-fg);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.lead-done__wpp:hover,
+.lead-done__wpp:focus-visible {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 640px) {
+  .trafego__cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .trafego__cta-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lead-modal,
+  .lead-modal__panel,
+  .trafego__cta-btn {
+    transition: none;
+  }
+}
+
+
 /* =========================================================
    A MÁQUINA — lista de projetos, separadores vermelhos sutis,
    hover em vermelho agressivo.
@@ -1033,8 +1334,8 @@ button:focus-visible,
   padding: 5px 14px;
   margin-bottom: 1rem;
   border-radius: var(--radius-pill);
-  background: rgba(226, 69, 63, 0.1);
-  border: 1px solid rgba(226, 69, 63, 0.25);
+  background: rgba(31, 122, 78, 0.1);
+  border: 1px solid rgba(31, 122, 78, 0.25);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.18em;
@@ -1792,8 +2093,8 @@ button:focus-visible,
   display: inline-block;
   padding: 5px 14px;
   border-radius: var(--radius-pill);
-  background: rgba(226, 69, 63, 0.1);
-  border: 1px solid rgba(226, 69, 63, 0.25);
+  background: rgba(31, 122, 78, 0.1);
+  border: 1px solid rgba(31, 122, 78, 0.25);
   color: var(--color-accent);
   font-size: 0.72rem;
   font-weight: 600;
@@ -1914,9 +2215,9 @@ html.reduced-motion #contact [data-reveal] {
   white-space: nowrap;
 }
 .leads__pill--ok {
-  border-color: rgba(226, 69, 63, 0.45);
+  border-color: rgba(var(--color-accent-rgb), 0.45);
   color: var(--color-fg);
-  background: rgba(226, 69, 63, 0.12);
+  background: rgba(var(--color-accent-rgb), 0.12);
 }
 .leads__foot {
   margin-top: 1.25rem;

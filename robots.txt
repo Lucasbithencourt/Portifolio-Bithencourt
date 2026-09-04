@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# TODO: trocar seudominio.com pelo domínio real quando tiver.
-Sitemap: https://seudominio.com/sitemap.xml
+Sitemap: https://lucasbithencourt.vercel.app/sitemap.xml
