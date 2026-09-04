@@ -1,5 +1,5 @@
 /* =========================================================================
-   PORTFÓLIO — Dark Sci-Fi (acento VERMELHO #e60000)
+   PORTFÓLIO — Dark Sci-Fi (acento VERDE ESCURO #1f7a4e)
    Script ÚNICO e compartilhado entre páginas (index.html, case.html).
    Cada módulo é blindado: só inicializa se os elementos da página existirem.
    GSAP (ScrollTrigger) + Lenis + Canvas 2D · Vanilla
@@ -307,6 +307,23 @@ function initPortfolioReveal() {
       stagger: 0.08,
       scrollTrigger: {
         trigger: "#trafego",
+        start: "top 75%",
+        toggleActions: "play none none reverse",
+      },
+    });
+  }
+
+  const provasItems = gsap.utils.toArray("#provas [data-reveal]");
+  if (provasItems.length) {
+    gsap.set(provasItems, { autoAlpha: 0, y: 50 });
+    gsap.to(provasItems, {
+      autoAlpha: 1,
+      y: 0,
+      ease: "power3.out",
+      duration: 0.9,
+      stagger: 0.08,
+      scrollTrigger: {
+        trigger: "#provas",
         start: "top 75%",
         toggleActions: "play none none reverse",
       },
@@ -704,10 +721,10 @@ function initCasesSwiper() {
       modifier: 1.5,
       slideShadows: false,
     },
-    pagination: { el: ".swiper-pagination", clickable: true },
+    pagination: { el: ".cases-swiper .swiper-pagination", clickable: true },
     navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
+      nextEl: ".cases-swiper .swiper-button-next",
+      prevEl: ".cases-swiper .swiper-button-prev",
     },
     keyboard: { enabled: true },
     a11y: { enabled: true },
@@ -1315,8 +1332,91 @@ if (heroCanvas) {
   lenis.start();
 }
 
+/* =========================================================================
+   CARROSSEL DE PROVAS — um print do gerenciador por slide. Seletores
+   escopados em .provas-swiper pra não brigar com o carrossel de cases.
+   Blindado: só roda se a seção e a lib Swiper existirem.
+   ========================================================================= */
+function initProvasSwiper() {
+  const el = document.querySelector(".provas-swiper");
+  if (!el) return;
+  if (typeof Swiper === "undefined") return;
+
+  new Swiper(".provas-swiper", {
+    slidesPerView: 1,
+    spaceBetween: 24,
+    autoHeight: true, // cada prova tem um texto de tamanho diferente
+    grabCursor: true,
+    pagination: { el: ".provas-swiper .swiper-pagination", clickable: true },
+    navigation: {
+      nextEl: ".provas-swiper .swiper-button-next",
+      prevEl: ".provas-swiper .swiper-button-prev",
+    },
+    keyboard: { enabled: true },
+    a11y: { enabled: true },
+  });
+}
+
+/* =========================================================================
+   LIGHTBOX DAS PROVAS — o print é largo demais pra ser lido dentro do card,
+   então clicar abre ele em tamanho cheio. Fecha no Esc, no X ou clicando no
+   fundo. Devolve o foco pro botão de origem ao fechar.
+   ========================================================================= */
+function initProvaLightbox() {
+  const box = document.getElementById("prova-lightbox");
+  const img = document.getElementById("prova-lightbox-img");
+  const closeBtn = box && box.querySelector(".prova-lightbox__close");
+  const triggers = document.querySelectorAll("[data-prova-shot]");
+  if (!box || !img || !closeBtn || !triggers.length) return;
+
+  let lastTrigger = null;
+
+  function open(trigger) {
+    const shot = trigger.getAttribute("data-prova-shot");
+    const inner = trigger.querySelector("img");
+    if (!shot) return;
+
+    lastTrigger = trigger;
+    img.src = shot;
+    img.alt = inner ? inner.alt : "";
+    box.classList.add("is-open");
+    box.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    lenis.stop(); // trava o scroll suave da página por baixo
+    closeBtn.focus();
+  }
+
+  function close() {
+    box.classList.remove("is-open");
+    box.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    lenis.start();
+    if (lastTrigger) lastTrigger.focus();
+    lastTrigger = null;
+  }
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener("click", () => open(trigger));
+  });
+
+  closeBtn.addEventListener("click", close);
+
+  // Clique no fundo (fora da imagem) fecha.
+  box.addEventListener("click", (e) => {
+    if (e.target === box || e.target.classList.contains("prova-lightbox__stage")) {
+      close();
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && box.classList.contains("is-open")) close();
+  });
+}
+
 initPortfolioReveal();
 initCasesSwiper();
+initProvasSwiper();
+initProvaLightbox();
 initCaseModal();
 initHeroIcons();
 initHeroTitleRotate();

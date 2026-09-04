@@ -7,7 +7,7 @@
   --color-bg: #0b0b0d;             /* preto neutro, levemente azulado */
   --color-fg: #f2f2f2;
   --color-muted: #9a9a9e;          /* cinza neutro */
-  --color-accent: #e2453f;         /* vermelho de acento (menos agressivo) */
+  --color-accent: #1f7a4e;         /* verde escuro de acento */
   --color-accent-soft: rgba(255, 255, 255, 0.08); /* bordas/separadores neutros */
   --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
@@ -149,8 +149,8 @@ button:focus-visible,
   display: inline-block;
   padding: 5px 14px;
   border-radius: var(--radius-pill);
-  background: rgba(226, 69, 63, 0.1);
-  border: 1px solid rgba(226, 69, 63, 0.25);
+  background: rgba(31, 122, 78, 0.1);
+  border: 1px solid rgba(31, 122, 78, 0.25);
   color: var(--color-accent);
   font-size: 0.72rem;
   font-weight: 600;
@@ -242,9 +242,9 @@ button:focus-visible,
   color: var(--color-bg);
   /* Contorno neon vermelho sutil em repouso, "respirando" devagar. */
   box-shadow:
-    0 0 0 1px rgba(226, 69, 63, 0.35),
-    0 0 8px rgba(226, 69, 63, 0.25),
-    0 0 16px rgba(226, 69, 63, 0.12);
+    0 0 0 1px rgba(31, 122, 78, 0.35),
+    0 0 8px rgba(31, 122, 78, 0.25),
+    0 0 16px rgba(31, 122, 78, 0.12);
   transition: transform 0.25s ease, opacity 0.25s ease, box-shadow 0.3s ease;
   animation: cta-neon-pulse 3s ease-in-out infinite;
 }
@@ -253,10 +253,10 @@ button:focus-visible,
   opacity: 0.9;
   /* Neon "aceso" — bem mais forte; pausa o pulso (estado forte fixo). */
   box-shadow:
-    0 0 0 1.5px rgba(226, 69, 63, 0.9),
-    0 0 14px rgba(226, 69, 63, 0.6),
-    0 0 30px rgba(226, 69, 63, 0.4),
-    0 0 50px rgba(226, 69, 63, 0.2);
+    0 0 0 1.5px rgba(31, 122, 78, 0.9),
+    0 0 14px rgba(31, 122, 78, 0.6),
+    0 0 30px rgba(31, 122, 78, 0.4),
+    0 0 50px rgba(31, 122, 78, 0.2);
   animation-play-state: paused;
 }
 
@@ -264,15 +264,15 @@ button:focus-visible,
   0%,
   100% {
     box-shadow:
-      0 0 0 1px rgba(226, 69, 63, 0.35),
-      0 0 8px rgba(226, 69, 63, 0.25),
-      0 0 16px rgba(226, 69, 63, 0.12);
+      0 0 0 1px rgba(31, 122, 78, 0.35),
+      0 0 8px rgba(31, 122, 78, 0.25),
+      0 0 16px rgba(31, 122, 78, 0.12);
   }
   50% {
     box-shadow:
-      0 0 0 1px rgba(226, 69, 63, 0.45),
-      0 0 10px rgba(226, 69, 63, 0.32),
-      0 0 20px rgba(226, 69, 63, 0.16);
+      0 0 0 1px rgba(31, 122, 78, 0.45),
+      0 0 10px rgba(31, 122, 78, 0.32),
+      0 0 20px rgba(31, 122, 78, 0.16);
   }
 }
 
@@ -709,6 +709,326 @@ button:focus-visible,
   }
 }
 
+/* =========================================================================
+   PROVAS — carrossel de prints do gerenciador da Meta. Mesmo card de vidro
+   do resto do site. O print é largo (1765x299): no desktop ocupa a largura
+   do card; no mobile rola na horizontal para continuar legível. Clicar abre
+   o lightbox em tamanho cheio.
+   ========================================================================= */
+.provas {
+  position: relative;
+  z-index: 2;
+  padding: clamp(4rem, 12vh, 12rem) clamp(1.5rem, 6vw, 6rem);
+  border-top: 1px solid var(--color-accent-soft);
+}
+
+.provas__inner {
+  max-width: 90rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.provas__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1.5rem;
+}
+
+.provas__headline {
+  font-size: clamp(1.9rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+  max-width: 22ch;
+  margin-bottom: 1.25rem;
+}
+
+.provas__lead {
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  line-height: 1.7;
+  color: var(--color-muted);
+  max-width: 52ch;
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+/* O carrossel precisa de padding lateral para as setas não cobrirem o card. */
+.provas-swiper {
+  padding-bottom: 3.5rem;
+}
+
+/* --- Card da prova --- */
+.prova {
+  height: auto; /* Swiper força stretch; aqui o card acompanha o conteúdo. */
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  box-sizing: border-box;
+}
+
+.prova__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.prova__index {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--color-accent);
+}
+
+/* Selo da plataforma (Meta Ads / Google Ads) — accent, para diferenciar
+   da tag de nicho. */
+.prova__plat {
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(31, 122, 78, 0.12);
+  border: 1px solid rgba(31, 122, 78, 0.35);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.prova__tag {
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  font-size: 0.75rem;
+  color: var(--color-fg);
+}
+
+.prova__period {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  margin-left: auto;
+}
+
+.prova__title {
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+  max-width: 34ch;
+  margin-bottom: 1.5rem;
+}
+
+/* Números-chave — lidos antes do print, porque o print é a evidência. */
+.prova__metrics {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  padding: 0;
+  margin: 0 0 clamp(1.5rem, 3vw, 2rem);
+}
+
+.prova__metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.prova__metric-value {
+  font-size: clamp(1.4rem, 3vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--color-fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.prova__metric-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-muted);
+}
+
+/* Uma prova pode ter mais de um print (ex.: aba de resultados + aba de
+   alcance/CTR). Empilhados com respiro entre eles. */
+.prova__shots {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* O print. É um <button> para ser acessível por teclado. */
+.prova__shot {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  cursor: zoom-in;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.prova__shot:hover,
+.prova__shot:focus-visible {
+  border-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-2px);
+}
+
+.prova__shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.prova__text {
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  line-height: 1.7;
+  color: var(--color-muted);
+  max-width: 68ch;
+  margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+
+/* Números citados no meio do texto ganham peso, sem virar outra cor. */
+.prova__text strong {
+  color: var(--color-fg);
+  font-weight: 600;
+}
+
+/* Frase de fechamento da seção — fecha o argumento das provas. */
+.provas__quote {
+  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+  padding-top: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--card-border);
+  max-width: 60ch;
+}
+
+.provas__quote p {
+  font-size: clamp(1.05rem, 2vw, 1.4rem);
+  line-height: 1.55;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+  margin-bottom: 1rem;
+}
+
+.provas__quote cite {
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* No mobile o print encolheria a ponto de não dar para ler. Então ele
+   mantém uma largura mínima e o container rola na horizontal. */
+@media (max-width: 900px) {
+  .prova__metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .prova__shot {
+    overflow-x: auto;
+    cursor: pointer;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .prova__shot img {
+    width: auto;
+    min-width: 760px;
+    max-width: none;
+  }
+
+  /* Painel do Google Ads é alto, não uma tira larga: cabe na tela. */
+  .prova__shot--tall {
+    overflow-x: visible;
+  }
+
+  .prova__shot--tall img {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .prova__period {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* --- Lightbox --- */
+.prova-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: rgba(5, 5, 7, 0.92);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.prova-lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Print largo: o palco rola na horizontal em vez de espremer a imagem. */
+.prova-lightbox__stage {
+  max-width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  border-radius: 12px;
+  border: 1px solid var(--card-border);
+}
+
+.prova-lightbox__img {
+  display: block;
+  max-width: none;
+  height: auto;
+}
+
+.prova-lightbox__close {
+  position: absolute;
+  top: clamp(0.75rem, 2vw, 1.5rem);
+  right: clamp(0.75rem, 2vw, 1.5rem);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--color-fg);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.prova-lightbox__close:hover,
+.prova-lightbox__close:focus-visible {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prova__shot,
+  .prova-lightbox {
+    transition: none;
+  }
+}
+
+
 /* =========================================================
    A MÁQUINA — lista de projetos, separadores vermelhos sutis,
    hover em vermelho agressivo.
@@ -968,8 +1288,8 @@ button:focus-visible,
   padding: 5px 14px;
   margin-bottom: 1rem;
   border-radius: var(--radius-pill);
-  background: rgba(226, 69, 63, 0.1);
-  border: 1px solid rgba(226, 69, 63, 0.25);
+  background: rgba(31, 122, 78, 0.1);
+  border: 1px solid rgba(31, 122, 78, 0.25);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.18em;
@@ -1727,8 +2047,8 @@ button:focus-visible,
   display: inline-block;
   padding: 5px 14px;
   border-radius: var(--radius-pill);
-  background: rgba(226, 69, 63, 0.1);
-  border: 1px solid rgba(226, 69, 63, 0.25);
+  background: rgba(31, 122, 78, 0.1);
+  border: 1px solid rgba(31, 122, 78, 0.25);
   color: var(--color-accent);
   font-size: 0.72rem;
   font-weight: 600;
