@@ -1994,3 +1994,13 @@ html.reduced-motion #contact [data-reveal] {
 @media (max-width: 640px) {
   .hero__icon { opacity: 0.3; }
 }
+
+/* Atribuição do trabalho à agência: informação de contexto, discreta,
+   logo abaixo do título da seção. */
+.works__nota {
+  margin-top: 0.9rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  max-width: 46ch;
+}

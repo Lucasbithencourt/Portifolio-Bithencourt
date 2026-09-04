@@ -910,6 +910,7 @@ const CASES = {
     meta: {
       Cliente: "UP! Especialidades Pediátricas",
       Papel: "Site do zero + gestão de tráfego pago",
+      Agência: "FEMO",
       Ano: "2025",
       Stack: "HTML · CSS · JavaScript",
     },
@@ -933,6 +934,7 @@ const CASES = {
     meta: {
       Cliente: "Rizzatti Dermatologia e Saúde",
       Papel: "Site do zero + gestão de tráfego pago",
+      Agência: "FEMO",
       Ano: "2025",
       Stack: "HTML · CSS · JavaScript",
     },
@@ -954,6 +956,7 @@ const CASES = {
     meta: {
       Cliente: "SULCARDIO Clínica Cardiológica",
       Papel: "Site do zero + gestão de tráfego pago",
+      Agência: "FEMO",
       Ano: "2025",
       Stack: "HTML · CSS · JavaScript",
     },
@@ -975,6 +978,7 @@ const CASES = {
     meta: {
       Cliente: "Ostermann Medical Center",
       Papel: "Personalização & Desenvolvimento",
+      Agência: "FEMO",
       Ano: "2025",
       Stack: "HTML · CSS · JavaScript",
     },
